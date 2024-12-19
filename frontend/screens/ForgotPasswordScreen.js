@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Text, StyleSheet, View, Image } from "react-native";
-import LogInActions from "../components/LogInActions";
+import ForgotPasswordActions from "../components/ForgotPasswordActions";
 import TextButton from "../components/TextButton";
 
-export default function LogIn({ navigation }) {
+export default function ForgotPasswordScreen() {
   return (
     <View style={styles.logIn}>
       <View style={[styles.textoSimples5, styles.textoPosition]}>
@@ -14,40 +14,12 @@ export default function LogIn({ navigation }) {
 
       <View style={[styles.textoSimples6, styles.textoPosition]}>
         <Text style={[styles.placeholder6, styles.placeholderFlexBox]}>
-          Log In
+          Forgot Password
         </Text>
       </View>
 
-      <LogInActions />
+      <ForgotPasswordActions />
 
-      <TextButton
-        style={styles.registerButton}
-        title="Não tenho uma conta"
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      />
-
-      <TextButton
-        style={styles.registerButton}
-        title="Esqueci a senha"
-        onPress={() => {
-          navigation.navigate("Forgot Password");
-        }}
-      />
-
-      <View style={[styles.texto, styles.textoFlexBox]}>
-        <View style={[styles.boto, styles.botoSpaceBlock]}>
-          <View style={styles.textoSimples}>
-            <Text style={styles.placeholder}>Entrar sem credenciais</Text>
-          </View>
-          <Image
-            style={styles.placeholderIcon}
-            resizeMode="cover"
-            source="placeholder.png"
-          />
-        </View>
-      </View>
     </View>
   );
 }

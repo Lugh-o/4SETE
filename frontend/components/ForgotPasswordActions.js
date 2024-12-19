@@ -1,26 +1,21 @@
 import * as React from "react";
-import { Text, StyleSheet, View, Image, Platform } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import FormTextField from "./FormTextField";
 import SimpleButton from "./SimpleButton";
-import { login, loadUser } from "../services/AuthService";
-import AuthContext from "../context/AuthContext";
+import { sendPasswordResetLink } from "../services/AuthService";
 
-export default function LogInActions() {
-  const { setUser } = React.useContext(AuthContext);
+// ISSO SÓ VAI FUNCIONAR DEPOIS DO BREEZE
+export default function ForgotPasswordActions() {
   const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [resetStatus, setResetStatus] = React.useState("");
   const [errors, setErrors] = React.useState({});
 
-  async function handleLogin() {
+  async function handleForgotPassword() {
     setErrors({});
+    setResetStatus("");
     try {
-      await login({
-        email,
-        password,
-        device_name: `${Platform.OS} ${Platform.Version}`,
-      });
-      const user = await loadUser();
-      setUser(user);
+      const status = await sendPasswordResetLink(email);
+      setResetStatus(status);
     } catch (e) {
       if (e.response.status === 422) {
         setErrors(e.response.data.errors);
@@ -31,6 +26,7 @@ export default function LogInActions() {
   return (
     <View style={styles.acoes}>
       <View style={styles.campos}>
+        {resetStatus && <Text>{resetStatus}</Text>}
         <FormTextField
           label="Email"
           value={email}
@@ -38,15 +34,11 @@ export default function LogInActions() {
           keyboardType="email-address"
           errors={errors.email}
         />
-        <FormTextField
-          label="Senha"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          errors={errors.password}
-        />
       </View>
-      <SimpleButton title="Entrar" onPress={handleLogin} />
+      <SimpleButton
+        title="E-mail Reset Password Link"
+        onPress={handleForgotPassword}
+      />
     </View>
   );
 }

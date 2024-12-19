@@ -1,14 +1,22 @@
-import { Text, View, StyleSheet } from "react-native";
-import React, { Component } from "react";
+import { Text, View, StyleSheet, Button } from "react-native";
+import React, { useContext } from "react";
+import AuthContext from "../context/AuthContext";
+import { logout } from "../services/AuthService";
 
-export default class HomeScreen extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>HomeScreen</Text>
-      </View>
-    );
+export default function HomeScreen(navigation) {
+  const { user, setUser } = useContext(AuthContext);
+
+  async function handleLogout() {
+    await logout();
+    setUser(null);
   }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome home, {user.name}</Text>
+      <Button title="Logout" onPress={handleLogout}></Button>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,7 +1,13 @@
 import * as React from "react";
-import { Text, StyleSheet, View, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 
-export default function SimpleButton({title, ...rest}) {
+export default function SimpleButton({ title, ...rest }) {
   return (
     <SafeAreaView style={[styles.simples, styles.simplesFlexBox]}>
       <View style={styles.boto}>

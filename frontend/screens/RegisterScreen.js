@@ -1,9 +1,8 @@
 import * as React from "react";
 import { Text, StyleSheet, View, Image } from "react-native";
-import LogInActions from "../components/LogInActions";
-import TextButton from "../components/TextButton";
+import RegisterActions from "../components/RegisterActions";
 
-export default function LogIn({ navigation }) {
+export default function LogIn(navigation) {
   return (
     <View style={styles.logIn}>
       <View style={[styles.textoSimples5, styles.textoPosition]}>
@@ -14,27 +13,11 @@ export default function LogIn({ navigation }) {
 
       <View style={[styles.textoSimples6, styles.textoPosition]}>
         <Text style={[styles.placeholder6, styles.placeholderFlexBox]}>
-          Log In
+          Register
         </Text>
       </View>
 
-      <LogInActions />
-
-      <TextButton
-        style={styles.registerButton}
-        title="Não tenho uma conta"
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      />
-
-      <TextButton
-        style={styles.registerButton}
-        title="Esqueci a senha"
-        onPress={() => {
-          navigation.navigate("Forgot Password");
-        }}
-      />
+      <RegisterActions />
 
       <View style={[styles.texto, styles.textoFlexBox]}>
         <View style={[styles.boto, styles.botoSpaceBlock]}>
@@ -49,13 +32,11 @@ export default function LogIn({ navigation }) {
         </View>
       </View>
     </View>
-  );
-}
+
+);
+};
 
 const styles = StyleSheet.create({
-  registerButton: {
-    top: 540,
-  },
   inputFlexBox1: {
     alignItems: "center",
     flexDirection: "row",
@@ -64,9 +45,9 @@ const styles = StyleSheet.create({
     width: 160,
     marginLeft: -80,
     left: "50%",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
     position: "absolute",
   },
   placeholderFlexBox: {
@@ -110,9 +91,8 @@ const styles = StyleSheet.create({
   logIn: {
     backgroundColor: "#f0f0f0",
     width: "100%",
-    height: "100%",
-    // overflow: "hidden",
-    // flex: 1,
-    // flexDirection: "column",
+    height: 844,
+    overflow: "hidden",
+    flex: 1,
   },
 });
