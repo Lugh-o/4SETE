@@ -62,69 +62,10 @@ export default function RegisterActions() {
   );
 }
 const styles = StyleSheet.create({
-  inputFlexBox: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  textoFlexBox: {
-    height: 42,
-    alignItems: "center",
-    flexDirection: "row",
-    padding: 12,
-    justifyContent: "center",
-    alignSelf: "stretch",
-  },
-  placeholder: {
-    fontSize: 14,
-    fontFamily: "Inter-Regular",
-    color: "#1a1a1a",
-    textAlign: "left",
-  },
-  input1: {
-    alignSelf: "stretch",
-    flex: 1,
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  input: {
-    height: 48,
-    padding: 12,
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    alignSelf: "stretch",
-  },
-  placeholderIcon: {
-    width: 24,
-    height: 24,
-  },
-  input3: {
-    gap: 12,
-    alignSelf: "stretch",
-  },
   campos: {
-    gap: 12,
-    alignSelf: "stretch",
-    alignItems: "center",
-  },
-  textoSimples2: {
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  placeholderIcon1: {
-    width: 16,
-    height: 16,
-  },
-  boto1: {
     gap: 12,
   },
   acoes: {
-    marginLeft: -150,
-    top: 337,
-    width: 300,
     gap: 24,
-    left: "50%",
-    alignItems: "flex-end",
-    position: "absolute",
   },
 });

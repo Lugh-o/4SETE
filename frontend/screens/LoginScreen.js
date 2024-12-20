@@ -1,118 +1,62 @@
-import * as React from "react";
-import { Text, StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View } from "react-native";
 import LogInActions from "../components/LogInActions";
 import TextButton from "../components/TextButton";
+import Logo from "../components/Logo";
+import PageTitle from "../components/PageTitle";
 
-export default function LogIn({ navigation }) {
+export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.logIn}>
-      <View style={[styles.textoSimples5, styles.textoPosition]}>
-        <Text style={[styles.placeholder5, styles.placeholderFlexBox]}>
-          4SETE
-        </Text>
-      </View>
+      <Logo style={styles.logo} />
 
-      <View style={[styles.textoSimples6, styles.textoPosition]}>
-        <Text style={[styles.placeholder6, styles.placeholderFlexBox]}>
-          Log In
-        </Text>
-      </View>
+      <PageTitle style={styles.pageTitle} label="Log In" />
 
-      <LogInActions />
+      <View style={styles.actionsView}>
+        <LogInActions />
+
+        <TextButton
+          title="Não tenho uma conta"
+          onPress={() => {
+            navigation.navigate("Register");
+          }}
+        />
+
+        <TextButton
+          title="Esqueci a senha"
+          onPress={() => {
+            navigation.navigate("Forgot Password");
+          }}
+        />
+      </View>
 
       <TextButton
-        style={styles.registerButton}
-        title="Não tenho uma conta"
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
+        style={styles.noCredentialsButton}
+        title="Entrar sem credenciais"
       />
-
-      <TextButton
-        style={styles.registerButton}
-        title="Esqueci a senha"
-        onPress={() => {
-          navigation.navigate("Forgot Password");
-        }}
-      />
-
-      <View style={[styles.texto, styles.textoFlexBox]}>
-        <View style={[styles.boto, styles.botoSpaceBlock]}>
-          <View style={styles.textoSimples}>
-            <Text style={styles.placeholder}>Entrar sem credenciais</Text>
-          </View>
-          <Image
-            style={styles.placeholderIcon}
-            resizeMode="cover"
-            source="placeholder.png"
-          />
-        </View>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  registerButton: {
-    top: 540,
-  },
-  inputFlexBox1: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  textoPosition: {
-    width: 160,
-    marginLeft: -80,
-    left: "50%",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // flexDirection: "row",
+  actionsView: {
     position: "absolute",
-  },
-  placeholderFlexBox: {
-    textAlign: "center",
-    color: "#1a1a1a",
-    flex: 1,
-  },
-  textoSimples: {
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  boto: {
+    top: 337,
     gap: 12,
   },
-  texto: {
-    top: 771,
-    left: 170,
-    position: "absolute",
-    padding: 12,
+  noCredentialsButton: {
+    top: 726,
+    left: 0,
   },
-  texto1: {
-    alignSelf: "stretch",
-  },
-  placeholder5: {
-    fontSize: 48,
-    fontWeight: "700",
-    fontFamily: "Westgate",
-  },
-  textoSimples5: {
-    top: 207,
-  },
-  placeholder6: {
-    fontSize: 18,
-    fontFamily: "Inter-Regular",
-    textAlign: "center",
-  },
-  textoSimples6: {
+  pageTitle: {
     top: 255,
+  },
+  logo: {
+    alignSelf: "center",
+    position: "absolute",
+    top: 207,
   },
   logIn: {
     backgroundColor: "#f0f0f0",
-    width: "100%",
-    height: "100%",
-    // overflow: "hidden",
-    // flex: 1,
-    // flexDirection: "column",
+    margin: 45,
   },
 });

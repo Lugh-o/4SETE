@@ -1,42 +1,44 @@
 import * as React from "react";
 import { Text, StyleSheet, View, Image } from "react-native";
 import RegisterActions from "../components/RegisterActions";
+import PageTitle from "../components/PageTitle";
+import Logo from "../components/Logo";
+import SecondaryButton from "../components/SecondaryButton";
 
-export default function LogIn(navigation) {
+export default function RegisterScreen({ navigation }) {
   return (
-    <View style={styles.logIn}>
-      <View style={[styles.textoSimples5, styles.textoPosition]}>
-        <Text style={[styles.placeholder5, styles.placeholderFlexBox]}>
-          4SETE
-        </Text>
-      </View>
+    <View style={styles.register}>
+      <Logo style={styles.logo} />
 
-      <View style={[styles.textoSimples6, styles.textoPosition]}>
-        <Text style={[styles.placeholder6, styles.placeholderFlexBox]}>
-          Register
-        </Text>
-      </View>
+      <PageTitle style={styles.pageTitle} label="Log In" />
 
-      <RegisterActions />
-
-      <View style={[styles.texto, styles.textoFlexBox]}>
-        <View style={[styles.boto, styles.botoSpaceBlock]}>
-          <View style={styles.textoSimples}>
-            <Text style={styles.placeholder}>Entrar sem credenciais</Text>
-          </View>
-          <Image
-            style={styles.placeholderIcon}
-            resizeMode="cover"
-            source="placeholder.png"
-          />
-        </View>
+      <View style={styles.actionsView}>
+        <RegisterActions />
+        <SecondaryButton
+          title="Cancelar"
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+        />
       </View>
     </View>
-
-);
-};
+  );
+}
 
 const styles = StyleSheet.create({
+  actionsView: {
+    position: "absolute",
+    top: 337,
+    gap: 12,
+  },
+  logo: {
+    alignSelf: "center",
+    position: "absolute",
+    top: 207,
+  },
+  pageTitle: {
+    top: 255,
+  },
   inputFlexBox1: {
     alignItems: "center",
     flexDirection: "row",
@@ -88,11 +90,8 @@ const styles = StyleSheet.create({
   textoSimples6: {
     top: 255,
   },
-  logIn: {
+  register: {
     backgroundColor: "#f0f0f0",
-    width: "100%",
-    height: 844,
-    overflow: "hidden",
-    flex: 1,
+    margin: 45,
   },
 });
