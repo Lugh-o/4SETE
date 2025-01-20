@@ -2,7 +2,7 @@ import { View, TextInput, StyleSheet, Text } from "react-native";
 
 export default function FormTextField({ label, errors = [], ...rest }) {
   return (
-    <View>
+    <View >
       <TextInput
         style={[styles.input]}
         autoCapitalize="none"

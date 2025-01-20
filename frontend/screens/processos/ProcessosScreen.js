@@ -1,0 +1,146 @@
+import { View, StyleSheet, Text, ScrollView } from "react-native";
+import React, { useEffect, useContext } from "react";
+
+import AuthContext from "../../context/AuthContext";
+import { logout } from "../../services/AuthService";
+
+import Logo from "../../components/Logo";
+import SimpleButton from "../../components/SimpleButton";
+import Navbar from "../../components/Navbar";
+import ListCard from "../../components/ListCard";
+
+import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
+import Edit from "../../assets/buttonIcons/border_color.svg";
+import Delete from "../../assets/buttonIcons/delete.svg";
+import { ProcessoService } from "../../services/CrudService";
+
+export default function ProcessosScreen({ navigation }) {
+  const { user, setUser } = useContext(AuthContext);
+  const [processoList, setProcessoList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  async function handleLogout() {
+    await logout();
+    setUser(null);
+  }
+  async function fetchProcessos() {
+    try {
+      const response = await ProcessoService.getAll();
+      setProcessoList(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar processos:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDelete(id) {
+    try {
+      const response = await ProcessoService.delete(id);
+      fetchProcessos();
+    } catch (error) {
+      console.error("Erro ao deletar processo:", error.message);
+    }
+  }
+
+  fetchProcessos();
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.main}>
+        <Logo style={styles.logo} />
+        <View style={styles.header}>
+          <SimpleButton
+            title="Página principal"
+            onPress={() => {
+              navigation.navigate("Home");
+            }}
+            icon={
+              <ArrowDropDown width={16} height={16} transform="rotate(270)" />
+            }
+            buttonStyle={styles.botaoHome}
+            textStyle={styles.textoHome}
+          />
+          <Text style={styles.title}>Processos</Text>
+        </View>
+
+        <ScrollView style={styles.scroll}>
+          {Array.isArray(processoList) &&
+            processoList.map((processo) => (
+              <ListCard
+                // TODO ver isso aqui
+                key={processo.id}
+                bigText={processo.nome}
+                mediumText={"0 Revelações, Validade: " + processo.validade}
+                icon2={<Edit width={16} height={16} />}
+                icon3={<Delete />}
+                borderColor={"greenBorder"}
+                style={{ marginBottom: 12 }}
+                onDelete={() => handleDelete(processo.id)}
+                onEdit={() =>
+                  navigation.navigate("ProcessosEditForm", {
+                    processo: processo,
+                  })
+                }
+              />
+            ))}
+        </ScrollView>
+      </View>
+      <Navbar />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  main: {
+    position: "absolute",
+    top: 54,
+    height: "100% - 150",
+  },
+  scroll: {
+    height: 594,
+    gap: 12,
+  },
+  headerContainer: {},
+  title: {
+    fontSize: 14,
+    fontWeight: "600",
+    fontFamily: "Inter-SemiBold",
+    color: "#1a1a1a",
+    margin: 0,
+    padding: 0,
+  },
+  header: {
+    flexDirection: "row",
+    alignSelf: "center",
+    gap: 125,
+    padding: 0,
+    margin: 0,
+    marginTop: 12,
+  },
+  botaoHome: {
+    backgroundColor: 0,
+    padding: 0,
+    margin: 0,
+  },
+  textoHome: {
+    padding: 0,
+    color: "#006A04",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+    marginLeft: 12,
+    marginRight: 8,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
+  },
+  text: {
+    textAlign: "center",
+  },
+  logo: {
+    alignSelf: "center",
+  },
+});

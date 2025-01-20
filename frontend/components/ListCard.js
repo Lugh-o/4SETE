@@ -1,32 +1,38 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import SimpleText from "./SimpleText";
 
-export default function Card({
-  icon1,
+export default function ListCard({
   icon2,
   icon3,
-  icon4,
   bigText,
   mediumText,
   borderColor,
+  onEdit,
+  onDelete,
   ...rest
 }) {
   return (
-    <TouchableOpacity {...rest}>
+    <View {...rest}>
       <View style={[styles.container, styles[borderColor]]}>
-        {icon1}
         <View style={styles.textContainer}>
           <SimpleText text={bigText} property={"big"} />
           <SimpleText text={mediumText} property={"medium"} />
         </View>
-        {icon4}
+
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={onEdit}>{icon2}</TouchableOpacity>
+          <TouchableOpacity onPress={onDelete}>{icon3}</TouchableOpacity>
+        </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-
+  blankIcon: {
+    width: 16,
+    height: 16,
+  },
   container: {
     borderStyle: "solid",
     borderWidth: 1,
@@ -34,22 +40,19 @@ const styles = StyleSheet.create({
     // gap: 12,
     alignItems: "center",
     padding: 12,
-    // paddingRight: 37,
+    paddingRight: 37,
     height: 100,
     marginLeft: 20,
     marginRight: 20,
-    width: 350,
+    // width: 300,
   },
   textContainer: {
     display: "flex",
     flexDirection: "column",
     rowGap: 8,
-    marginLeft: 12,
-    // paddingRight: 24?,
-    // marginRight: -12,
     // flexGrow: 1,
-    width: 246,
-    // width: "100%",
+    // width: 180,
+    width: "100%",
   },
   iconContainer: {
     flexDirection: "column",

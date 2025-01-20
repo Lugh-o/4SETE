@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
 
 import AuthContext from "../context/AuthContext";
@@ -14,10 +14,9 @@ import ScienceIcon from "../assets/buttonIcons/science.svg";
 import LinkedCameraIcon from "../assets/buttonIcons/linked_camera.svg";
 import PhotoLibraryIcon from "../assets/buttonIcons/photo_library.svg";
 
-
 import Navbar from "../components/Navbar";
 
-export default function HomeScreen(navigation) {
+export default function HomeScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
 
   async function handleLogout() {
@@ -31,12 +30,21 @@ export default function HomeScreen(navigation) {
 
       <Card
         icon1={<CameraRollIcon width={32} height={32} />}
-        // icon2={<PlaceholderIcon width={16} height={16} />}
-        // icon3={<PlaceholderIcon width={16} height={16} />}
-        icon4={<AddIcon width={24} height={24} />}
+        icon4={
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("FilmesCreateForm");
+            }}
+          >
+            <AddIcon width={24} height={24} />
+          </TouchableOpacity>
+        }
         bigText={"Meus Filmes"}
         mediumText={"0 filmes"}
         borderColor={"greenBorder"}
+        onPress={() => {
+          navigation.navigate("FilmesList");
+        }}
       />
       <Card
         icon1={<LinkedCameraIcon width={32} height={32} />}
@@ -50,12 +58,21 @@ export default function HomeScreen(navigation) {
 
       <Card
         icon1={<ScienceIcon width={32} height={32} />}
-        // icon2={<PlaceholderIcon width={16} height={16} />}
-        // icon3={<PlaceholderIcon width={16} height={16} />}
-        icon4={<AddIcon width={24} height={24} />}
-        bigText={"Meus Reveladores"}
-        mediumText={"0 reveladores"}
+        icon4={
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("ProcessosCreateForm");
+            }}
+          >
+            <AddIcon width={24} height={24} />
+          </TouchableOpacity>
+        }
+        bigText={"Meus Procesos"}
+        mediumText={"0 processos"}
         borderColor={"greenBorder"}
+        onPress={() => {
+          navigation.navigate("ProcessosList");
+        }}
       />
       <Card
         icon1={<PhotoLibraryIcon width={32} height={32} />}
@@ -76,8 +93,6 @@ export default function HomeScreen(navigation) {
         borderColor={"greenBorder"}
       />
 
-      {/* <Text style={styles.text}>Welcome home, {user.name}</Text> */}
-      {/* <Button title="Logout" onPress={handleLogout}></Button> */}
       <Navbar />
     </View>
   );

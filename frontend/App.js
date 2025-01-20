@@ -8,6 +8,14 @@ import SplashScreen from "./screens/SplashScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 
+import FilmesScreen from "./screens/filmes/FilmesScreen";
+import FilmesCreateForm from "./screens/filmes/FilmesCreateForm";
+import FilmesEditForm from "./screens/filmes/FilmesEditForm";
+
+import ProcessosScreen from "./screens/processos/ProcessosScreen";
+import ProcessosCreateForm from "./screens/processos/ProcessosCreateForm";
+import ProcessosEditForm from "./screens/processos/ProcessosEditForm";
+
 import AuthContext from "./context/AuthContext";
 import { loadUser } from "./services/AuthService";
 
@@ -42,19 +50,36 @@ export default function App() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Home" component={HomeScreen} />
-
-          {/* {user ? (
+          {user ? (
             <>
               <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="FilmesList" component={FilmesScreen} />
+              <Stack.Screen
+                name="FilmesCreateForm"
+                component={FilmesCreateForm}
+              />
+              <Stack.Screen name="FilmesEditForm" component={FilmesEditForm} />
+
+              <Stack.Screen name="ProcessosList" component={ProcessosScreen} />
+              <Stack.Screen
+                name="ProcessosCreateForm"
+                component={ProcessosCreateForm}
+              />
+              <Stack.Screen
+                name="ProcessosEditForm"
+                component={ProcessosEditForm}
+              />
             </>
           ) : (
             <>
               <Stack.Screen name="Login" component={LogInScreen} />
               <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
+              <Stack.Screen
+                name="Forgot Password"
+                component={ForgotPasswordScreen}
+              />
             </>
-          )} */}
+          )}
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>

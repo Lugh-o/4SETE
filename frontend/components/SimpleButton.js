@@ -1,16 +1,29 @@
 import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 
-export default function SimpleButton({ title, ...rest }) {
+export default function SimpleButton({
+  title,
+  onPress,
+  icon,
+  rightIcon,
+  textStyle,
+  buttonStyle,
+  ...rest
+}) {
   return (
-    <View style={[styles.simples]}>
-      <TouchableOpacity style={styles.button} {...rest}>
-        <Text style={styles.buttonTitle}>{title}</Text>
+    <View style={[styles.simples, buttonStyle]}>
+      <TouchableOpacity onPress={onPress} style={[styles.touchable]}>
+        {icon}
+        <Text style={[styles.buttonTitle, textStyle]}>{title}{rightIcon}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  touchable: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   buttonTitle: {
     textAlign: "center",
   },
