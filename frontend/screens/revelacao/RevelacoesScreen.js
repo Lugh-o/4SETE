@@ -2,7 +2,6 @@ import { View, StyleSheet, Text, ScrollView } from "react-native";
 import React, { useContext, useState } from "react";
 
 import AuthContext from "../../context/AuthContext";
-import { logout } from "../../services/AuthService";
 
 import Logo from "../../components/Logo";
 import SimpleButton from "../../components/SimpleButton";
@@ -13,6 +12,7 @@ import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import { RevelacaoService } from "../../services/CrudService";
+import SplashScreen from "../SplashScreen";
 
 export default function RevelacoesScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -21,6 +21,7 @@ export default function RevelacoesScreen({ navigation }) {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
       fetchRevelacoes();
     });
   }, [navigation]);
@@ -38,12 +39,15 @@ export default function RevelacoesScreen({ navigation }) {
 
   async function handleDelete(id) {
     try {
+      setLoading(true);
       const response = await RevelacaoService.delete(id);
       fetchRevelacoes();
     } catch (error) {
       console.error("Erro ao deletar revelacao:", error.message);
     }
   }
+
+  if (loading) return <SplashScreen />;
 
   return (
     <View style={styles.container}>

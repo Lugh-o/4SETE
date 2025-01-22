@@ -24,6 +24,8 @@ import {
   ProcessoService,
 } from "../../services/CrudService";
 import TextButton from "../../components/TextButton";
+import SplashScreen from "../SplashScreen";
+
 
 export default function RevelacoesCreateForm({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -42,9 +44,11 @@ export default function RevelacoesCreateForm({ navigation }) {
   const [customEtapas, setCustomEtapas] = useState([]);
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
       fetchFilmes();
       fetchCameras();
       fetchProcessos();
@@ -102,6 +106,8 @@ export default function RevelacoesCreateForm({ navigation }) {
       setProcessoDropdownList(processoDropdownData);
     } catch (error) {
       console.error("Erro ao buscar processos:", error.message);
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -147,8 +153,12 @@ export default function RevelacoesCreateForm({ navigation }) {
 
   function comecarRevelacao() {
     postRevelacao(false);
-    navigation.navigate("CronometroScreen", { etapas: customEtapas });
+    navigation.navigate("CronometroScreen", {
+      etapas: customEtapas,
+      processo: processoList[processo]["id"],
+    });
   }
+  if(loading) return <SplashScreen/>
 
   return (
     <View style={styles.container}>

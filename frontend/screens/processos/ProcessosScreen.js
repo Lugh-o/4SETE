@@ -2,7 +2,6 @@ import { View, StyleSheet, Text, ScrollView } from "react-native";
 import React, { useState, useContext } from "react";
 
 import AuthContext from "../../context/AuthContext";
-import { logout } from "../../services/AuthService";
 
 import Logo from "../../components/Logo";
 import SimpleButton from "../../components/SimpleButton";
@@ -13,6 +12,7 @@ import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import { ProcessoService } from "../../services/CrudService";
+import SplashScreen from "../SplashScreen";
 
 export default function ProcessosScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -21,6 +21,7 @@ export default function ProcessosScreen({ navigation }) {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
       fetchProcessos();
     });
   }, [navigation]);
@@ -38,12 +39,15 @@ export default function ProcessosScreen({ navigation }) {
 
   async function handleDelete(id) {
     try {
+      setLoading(true);
       const response = await ProcessoService.delete(id);
       fetchProcessos();
     } catch (error) {
       console.error("Erro ao deletar processo:", error.message);
     }
   }
+
+  if (loading) return <SplashScreen />;
 
   return (
     <View style={styles.container}>
@@ -70,7 +74,11 @@ export default function ProcessosScreen({ navigation }) {
               <ListCard
                 key={processo.id}
                 bigText={processo.nome}
-                mediumText={"0 Revelações, Validade: " + processo.validade}
+                mediumText={
+                  processo.quantidade_usos +
+                  " Revelações, Validade: " +
+                  processo.validade.substring(0, 10)
+                }
                 icon2={<Edit width={16} height={16} />}
                 icon3={<Delete />}
                 borderColor={"greenBorder"}

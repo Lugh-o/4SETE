@@ -35,6 +35,7 @@ export const ProcessoService = {
   create: (payload) => createResource("/processos", payload),
   update: (id, payload) => updateResource(`/processos/${id}`, payload),
   delete: (id) => deleteResource(`/processos/${id}`),
+  increment: (id) => updateResource(`/processos/${id}/increment`),
 };
 
 export const RevelacaoService = {

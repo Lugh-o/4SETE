@@ -169,4 +169,26 @@ class ProcessoController extends Controller
             }
         }
     }
+
+     /**
+     * Update the specified resource in storage.
+     */
+    public function incrementTimesUsed($id)
+    {
+        try {
+            $processo = Processo::findOrFail($id);
+            $processo->quantidade_usos++;
+            $processo->update(array($processo));
+
+            return response()->json([], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Revelação não encontrada'
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

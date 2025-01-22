@@ -31,11 +31,6 @@ export default function FilmesEditForm({ navigation, route }) {
   const [observacoes, setObservacoes] = useState(filme.observacoes);
   const [errors, setErrors] = useState({});
 
-  async function handleLogout() {
-    await logout();
-    setUser(null);
-  }
-
   async function handleEdit() {
     try {
       const payload = {

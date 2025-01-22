@@ -1,7 +1,5 @@
 import { StyleSheet, View } from "react-native";
 import NavbarButton from "./NavbarButton";
-import SimpleText from "./SimpleText";
-import ArrowDropDownCircleIcon from "../assets/buttonIcons/arrow_drop_down_circle.svg";
 import SettingsIcon from "../assets/buttonIcons/settings.svg";
 import CottageIcon from "../assets/buttonIcons/cottage.svg";
 import LocalLibraryIcon from "../assets/buttonIcons/local_library.svg";
@@ -9,16 +7,6 @@ import LocalLibraryIcon from "../assets/buttonIcons/local_library.svg";
 export default function Navbar() {
   return (
     <View style={styles.navegao}>
-      <View style={[styles.botoParent]}>
-        <View style={[styles.dropdownButton]}>
-          <ArrowDropDownCircleIcon width={16} height={16} />
-        </View>
-
-        <View style={[styles.textoSimples, styles.navegao1FlexBox]}>
-          <SimpleText text="Começar a revelar" property={"medium"} />
-        </View>
-      </View>
-
       <View style={[styles.navbar, styles.navegao1ShadowBox]}>
         <NavbarButton icon={<SettingsIcon width={24} height={24} />} />
         <NavbarButton icon={<CottageIcon width={24} height={24} />} />

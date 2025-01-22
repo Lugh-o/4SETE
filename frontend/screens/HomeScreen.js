@@ -20,6 +20,7 @@ import {
   RevelacaoService,
   ProcessoService,
 } from "../services/CrudService";
+import SplashScreen from "./SplashScreen";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -28,6 +29,7 @@ export default function HomeScreen({ navigation }) {
   const [camera, setCamera] = useState("");
   const [processo, setProcesso] = useState("");
   const [revelacao, setRevelacao] = useState("");
+  const [loading, setLoading] = useState(true);
 
   async function handleLogout() {
     await logout();
@@ -36,6 +38,7 @@ export default function HomeScreen({ navigation }) {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
       fetchFilmes();
       fetchCameras();
       fetchProcessos();
@@ -80,6 +83,8 @@ export default function HomeScreen({ navigation }) {
       setLoading(false);
     }
   }
+  
+  if (loading) return <SplashScreen />;
 
   return (
     <View style={styles.container}>

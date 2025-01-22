@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import React, { useContext, useState } from "react";
 
 import AuthContext from "../context/AuthContext";
@@ -8,32 +8,14 @@ import SimpleButton from "../components/SimpleButton";
 
 import ArrowDropDown from "../assets/buttonIcons/arrow_drop_down_circle.svg";
 import StopWatch from "../components/StopWatch";
+import { ProcessoService } from "../services/CrudService";
 
 export default function CronometroScreen({ navigation, route }) {
   const { user, setUser } = useContext(AuthContext);
   const [currentEtapa, setCurrentEtapa] = useState(0);
 
-    const etapas = route.params.etapas;
-//   const etapas = [
-//     {
-//       created_at: "2025-01-22T01:46:56.000000Z",
-//       duracao: 30,
-//       id: 1,
-//       nome: "etapa",
-//       posicao: 1,
-//       processo_id: 1,
-//       updated_at: "2025-01-22T01:46:56.000000Z",
-//     },
-//     {
-//       created_at: "2025-01-22T01:46:56.000000Z",
-//       duracao: 300,
-//       id: 2,
-//       nome: "yyyyytapa",
-//       posicao: 1,
-//       processo_id: 1,
-//       updated_at: "2025-01-22T01:46:56.000000Z",
-//     },
-//   ];
+  const etapas = route.params.etapas;
+  const processo = route.params.processo;
 
   return (
     <View style={styles.container}>
@@ -60,7 +42,8 @@ export default function CronometroScreen({ navigation, route }) {
             if (currentEtapa + 1 < etapas.length) {
               setCurrentEtapa(currentEtapa + 1);
             } else {
-              console.log("Todas as etapas concluídas!");
+              ProcessoService.increment(processo);
+              navigation.navigate("Home");
             }
           }}
         />

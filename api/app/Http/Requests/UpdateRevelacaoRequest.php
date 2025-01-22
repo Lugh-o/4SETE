@@ -25,6 +25,10 @@ class UpdateRevelacaoRequest extends FormRequest
             'filme_id' => ['required', 'integer'],
             'camera_id' => ['required', 'integer'],
             'processo_id' => ['required', 'integer'],
+            'revelacao_etapas' => ['required', 'array'],
+            'revelacao_etapas.*.nome' => ['required', 'string'],
+            'revelacao_etapas.*.duracao' => ['required', 'integer'],
+            'revelacao_etapas.*.posicao' => ['required', 'integer'],
         ];
     }
 }

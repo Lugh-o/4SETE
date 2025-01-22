@@ -13,15 +13,19 @@ import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import { FilmeService } from "../../services/CrudService";
+import SplashScreen from "../SplashScreen";
 
 export default function FilmesScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
   const [filmeList, setFilmeList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [teste, setTeste] = useState('');
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
       fetchFilmes();
+      
     });
   }, [navigation]);
 
@@ -38,12 +42,15 @@ export default function FilmesScreen({ navigation }) {
 
   async function handleDelete(id) {
     try {
+      setLoading(true);
       const response = await FilmeService.delete(id);
       fetchFilmes();
     } catch (error) {
       console.error("Erro ao deletar filme:", error.message);
     }
   }
+
+  if (loading) return <SplashScreen />;
 
   return (
     <View style={styles.container}>
@@ -66,21 +73,21 @@ export default function FilmesScreen({ navigation }) {
 
         <ScrollView style={styles.scroll}>
           {Array.isArray(filmeList) &&
-            filmeList.map((filme) => (
-              <ListCard
-                key={filme.id}
-                bigText={filme.marca + " " + filme.modelo}
-                mediumText={"Validade: " + filme.validade}
-                icon2={<Edit width={16} height={16} />}
-                icon3={<Delete />}
-                borderColor={"greenBorder"}
-                style={{ marginBottom: 12 }}
-                onDelete={() => handleDelete(filme.id)}
-                onEdit={() =>
-                  navigation.navigate("FilmesEditForm", { filme: filme })
-                }
-              />
-            ))}
+          filmeList.map((filme) => (
+            <ListCard
+              key={filme.id}
+              bigText={filme.marca + " " + filme.modelo}
+              mediumText={"Validade: " + filme.validade.substring(0, 10)}
+              icon2={<Edit width={16} height={16} />}
+              icon3={<Delete />}
+              borderColor={"greenBorder"}
+              style={{ marginBottom: 12 }}
+              onDelete={() => handleDelete(filme.id)}
+              onEdit={() =>
+                navigation.navigate("FilmesEditForm", { filme: filme })
+              }
+            />
+          ))}
         </ScrollView>
       </View>
       <Navbar />

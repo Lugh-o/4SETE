@@ -29,6 +29,7 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::get('/processos/{id}', [ProcessoController::class, 'show']);
     Route::delete('/processos/{id}', [ProcessoController::class, 'destroy']);
     Route::put('/processos/{id}', [ProcessoController::class, 'update']);
+    Route::put('/processos/{id}/increment', [ProcessoController::class, 'incrementTimesUsed']);
 
     Route::get('/revelacoes', [RevelacaoController::class, 'index']);
     Route::post('/revelacoes', [RevelacaoController::class, 'store']);
