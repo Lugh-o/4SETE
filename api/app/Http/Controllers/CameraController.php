@@ -29,14 +29,6 @@ class CameraController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCameraRequest $request)
@@ -49,7 +41,6 @@ class CameraController extends Controller
             $camera->marca = $data["marca"];
             $camera->modelo = $data["modelo"];
             $camera->user_id = $idUser;
-
             $camera->save();
 
             return response()->json([], 201);
@@ -79,14 +70,6 @@ class CameraController extends Controller
                 'error' => $th->getMessage()
             ], 500);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Camera $camera)
-    {
-        //
     }
 
     /**

@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProcessoRequest;
 use App\Http\Requests\UpdateProcessoRequest;
-use App\Models\Etapa;
+use App\Models\ProcessoEtapa;
 use App\Models\Processo;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -20,7 +19,7 @@ class ProcessoController extends Controller
         $idUser =  auth('sanctum')->user()["id"];
 
         try {
-            $processos = Processo::where('user_id', $idUser)->with('etapas')->get();
+            $processos = Processo::where('user_id', $idUser)->with('processoEtapa')->get();
             return response()->json([
                 'data' => $processos
             ], 200);
@@ -37,6 +36,7 @@ class ProcessoController extends Controller
     public function store(StoreProcessoRequest $request)
     {
         $filteredData = $this->filterProcessoData($request);
+
         $idUser =  auth('sanctum')->user()["id"];
 
         try {
@@ -51,7 +51,7 @@ class ProcessoController extends Controller
             $processo->user_id = $idUser;
             $processo->save();
 
-            $this->syncSteps($processo, $filteredData['etapas']);
+            $this->syncSteps($processo, $filteredData['processo_etapas']);
 
             return response()->json([], 201);
         } catch (\Throwable $th) {
@@ -93,8 +93,8 @@ class ProcessoController extends Controller
 
             $processo = Processo::findOrFail($id);
 
-            $processo->update($filteredData);
-            $this->syncSteps($processo, $filteredData['steps']);
+            $processo->update($filteredData['processo']);
+            $this->syncSteps($processo, $filteredData['processo_etapas']);
 
             return response()->json([], 200);
         } catch (ModelNotFoundException $e) {
@@ -111,11 +111,11 @@ class ProcessoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Processo $id)
+    public function destroy($id)
     {
         try {
-            $filme = Processo::findOrFail($id);
-            $filme->delete();
+            $processo = Processo::findOrFail($id);
+            $processo->delete();
 
             return response()->json([
                 'message' => 'Processo deletado com sucesso'
@@ -142,25 +142,25 @@ class ProcessoController extends Controller
             'valor',
             'quantidade_usos',
             'user_id',
-            'etapas'
+            'processo_etapas'
         ]);
 
-        $etapas = collect($data['etapas'] ?? [])->map(fn($p) => array_intersect_key($p, array_flip(['nome', 'duracao', 'posicao', 'processo_id'])));
-        return ['processo' => $data, 'etapas' => $etapas];
+        $etapas = collect($data['processo_etapas'] ?? [])->map(fn($p) => array_intersect_key($p, array_flip(['nome', 'duracao', 'posicao', 'processo_id'])));
+        return ['processo' => $data, 'processo_etapas' => $etapas];
     }
 
     private function syncSteps(Processo $processo, $etapas)
     {
-        $currentEtapasIds = $processo->etapas->pluck('id')->toArray();
+        $currentEtapasIds = $processo->processoEtapa->pluck('id')->toArray();
         $updatedEtapasIds = $etapas->pluck('id')->toArray();
         $etapasToDelete = array_diff($currentEtapasIds, $updatedEtapasIds);
 
-        Etapa::whereIn('id', $etapasToDelete)->delete();
+        ProcessoEtapa::whereIn('id', $etapasToDelete)->delete();
         foreach ($etapas as $etapa) {
             if (isset($etapa['id']) && in_array($etapa['id'], $currentEtapasIds)) {
-                Etapa::find($etapa['id'])->update($etapa);
+                ProcessoEtapa::find($etapa['id'])->update($etapa);
             } else {
-                $novaEtapa = new Etapa();
+                $novaEtapa = new ProcessoEtapa();
                 $novaEtapa->nome = $etapa['nome'];
                 $novaEtapa->duracao = $etapa['duracao'];
                 $novaEtapa->posicao = $etapa['posicao'];

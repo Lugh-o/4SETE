@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -13,23 +13,23 @@ import { FilmeService } from "../../services/CrudService";
 
 export default function FilmesEditForm({ navigation, route }) {
   const filme = route.params.filme;
-
+  
   const { user, setUser } = useContext(AuthContext);
-  const [marca, setMarca] = React.useState(filme.marca);
-  const [modelo, setModelo] = React.useState(filme.modelo);
-  const [iso, setIso] = React.useState(filme.iso);
+  const [marca, setMarca] = useState(filme.marca);
+  const [modelo, setModelo] = useState(filme.modelo);
+  const [iso, setIso] = useState(filme.iso);
 
-  const [validade, setValidade] = React.useState(new Date(filme.validade));
-  const [showValidade, setShowValidade] = React.useState(false);
-  const [dataCompra, setDataCompra] = React.useState(
+  const [validade, setValidade] = useState(new Date(filme.validade));
+  const [showValidade, setShowValidade] = useState(false);
+  const [dataCompra, setDataCompra] = useState(
     new Date(filme.data_compra)
   );
-  const [showDataCompra, setShowDataCompra] = React.useState(false);
+  const [showDataCompra, setShowDataCompra] = useState(false);
 
-  const [loja, setLoja] = React.useState(filme.loja);
-  const [valor, setValor] = React.useState(filme.valor);
-  const [observacoes, setObservacoes] = React.useState(filme.observacoes);
-  const [errors, setErrors] = React.useState({});
+  const [loja, setLoja] = useState(filme.loja);
+  const [valor, setValor] = useState(filme.valor);
+  const [observacoes, setObservacoes] = useState(filme.observacoes);
+  const [errors, setErrors] = useState({});
 
   async function handleLogout() {
     await logout();

@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Etapa extends Model
+class RevelacaoEtapa extends Model
 {
-    /** @use HasFactory<\Database\Factories\EtapaFactory> */
+    /** @use HasFactory<\Database\Factories\EtapaRevelacaoFactory> */
     use HasFactory;
     protected $fillable = [
         'nome',
         'duracao',
-        'processo_id',
+        'revelacao_id',
         'posicao'
     ];
 
-    public function processo()
+    public function revelacao()
     {
-        return $this->belongsTo(Processo::class);
+        return $this->belongsTo(Revelacao::class);
     }
 }

@@ -25,9 +25,14 @@ class Processo extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function etapas()
+    public function revelacao()
     {
-        return $this->hasMany(Etapa::class);
+        return $this->hasMany(Revelacao::class);
+    }
+
+    public function processoEtapa()
+    {
+        return $this->hasMany(ProcessoEtapa::class);
     }
 
     public function setValidadeAttribute($value)
@@ -43,7 +48,7 @@ class Processo extends Model
     private function convertToMySQLDateTime($value)
     {
         try {
-            return \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s');
+            return \Carbon\Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
             return null; // Opcional: retorna nulo em caso de erro
         }

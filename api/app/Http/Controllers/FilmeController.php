@@ -6,7 +6,6 @@ use App\Http\Requests\StoreFilmeRequest;
 use App\Http\Requests\UpdateFilmeRequest;
 use App\Models\Filme;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Session;
 
 class FilmeController extends Controller
 {
@@ -29,13 +28,6 @@ class FilmeController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -85,14 +77,6 @@ class FilmeController extends Controller
                 'error' => $th->getMessage()
             ], 500);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Filme $filme)
-    {
-        //
     }
 
     /**

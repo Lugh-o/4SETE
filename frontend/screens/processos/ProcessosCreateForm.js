@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -13,25 +13,26 @@ import AuthContext from "../../context/AuthContext";
 import { logout } from "../../services/AuthService";
 import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
+import Delete from "../../assets/buttonIcons/delete.svg";
 
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
-import { EtapaService, ProcessoService } from "../../services/CrudService";
+import { ProcessoService } from "../../services/CrudService";
 
 export default function ProcessosCreateForm({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
-  const [nome, setNome] = React.useState("");
-  const [marca, setMarca] = React.useState("");
-  const [dataCompra, setDataCompra] = React.useState(new Date(Date.now()));
-  const [validade, setValidade] = React.useState(new Date(Date.now()));
-  const [showValidade, setShowValidade] = React.useState(false);
-  const [showDataCompra, setShowDataCompra] = React.useState(false);
-  const [loja, setLoja] = React.useState("");
-  const [valor, setValor] = React.useState("");
-  const [quantidadeUsos, setQuantidadeUsos] = React.useState("");
-  const [observacoes, setObservacoes] = React.useState("");
-  const [errors, setErrors] = React.useState({});
+  const [nome, setNome] = useState("");
+  const [marca, setMarca] = useState("");
+  const [dataCompra, setDataCompra] = useState(new Date(Date.now()));
+  const [validade, setValidade] = useState(new Date(Date.now()));
+  const [showValidade, setShowValidade] = useState(false);
+  const [showDataCompra, setShowDataCompra] = useState(false);
+  const [loja, setLoja] = useState("");
+  const [valor, setValor] = useState("");
+  const [quantidadeUsos, setQuantidadeUsos] = useState("");
+  const [observacoes, setObservacoes] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const [etapaList, setEtapaLista] = React.useState([
+  const [etapaList, setEtapaLista] = useState([
     {
       nome: "",
       duracao: "",
@@ -46,13 +47,19 @@ export default function ProcessosCreateForm({ navigation }) {
   }
 
   async function addEtapa() {
-    var newEtapaList = etapaList;
+    var newEtapaList = [...etapaList];
     newEtapaList.push({
       nome: "",
       duracao: "",
       processo_id: "",
       posicao: etapaList.length,
     });
+    setEtapaLista(newEtapaList);
+  }
+
+  function handleStepDeletion(index) {
+    var newEtapaList = [...etapaList];
+    newEtapaList.splice(index, 1);
     setEtapaLista(newEtapaList);
   }
 
@@ -66,17 +73,15 @@ export default function ProcessosCreateForm({ navigation }) {
       valor: valor,
       quantidade_usos: quantidadeUsos,
       observacoes: observacoes,
-      etapas: etapaList,
+      processo_etapas: etapaList,
     };
-    console.log(processo);
-    
 
     try {
       const response = await ProcessoService.create(processo);
 
       navigation.goBack();
     } catch (error) {
-      console.error(error.response?.data || error.message);
+      console.error(error.response.data);
     }
   }
 
@@ -84,9 +89,16 @@ export default function ProcessosCreateForm({ navigation }) {
     setValidade(selectedDate);
     setShowValidade(false);
   }
+
   function changeDataCompra(event, selectedDate) {
     setDataCompra(selectedDate);
     setShowDataCompra(false);
+  }
+  
+  function changeDictionaryValueByKey(array, index, key, value) {
+    var newArray = JSON.parse(JSON.stringify(array));
+    newArray[index][key] = value;
+    return newArray;
   }
 
   return (
@@ -201,24 +213,39 @@ export default function ProcessosCreateForm({ navigation }) {
         {Array.isArray(etapaList) &&
           etapaList.map((etapa, index) => (
             <View style={styles.stepContainer} key={index}>
-              <Text style={[styles.stepTitle]}>
-                {etapaList[0].nome === ""
-                  ? "Nome da etapa"
-                  : etapaList[index].nome}
-              </Text>
+              <View style={styles.stepheader}>
+                <Text style={[styles.stepTitle]}>
+                  {etapa.nome === "" ? "Nome da etapa" : etapaList[index].nome}
+                </Text>
+                <TouchableOpacity onPress={() => handleStepDeletion(index)}>
+                  <Delete />
+                </TouchableOpacity>
+              </View>
               <FormTextField
                 label="Nome da etapa*"
                 // value={etapa.nome}
-                onChangeText={(text) => (etapaList[index].nome = text)}
+                onChangeText={(text) =>
+                  setEtapaLista(
+                    changeDictionaryValueByKey(etapaList, index, "nome", text)
+                  )
+                }
               />
               <FormTextField
                 label="Tempo da etapa"
                 // value={etapaList[index].duracao}
-                onChangeText={(text) => (etapaList[index].duracao = text)}
+                onChangeText={(text) =>
+                  setEtapaLista(
+                    changeDictionaryValueByKey(
+                      etapaList,
+                      index,
+                      "duracao",
+                      text
+                    )
+                  )
+                }
               />
             </View>
           ))}
-
         <SimpleButton
           title="Adicionar Etapa"
           onPress={addEtapa}
@@ -232,6 +259,12 @@ export default function ProcessosCreateForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  stepheader: {
+    flexDirection: "row",
+    alignContent: "center",
+    alignItems: "center",
+    width: 300,
+  },
   botaoAddProcesso: {
     backgroundColor: 0,
     margin: 0,
@@ -249,6 +282,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Inter-Regular",
     color: "#1a1a1a",
+    width: 284,
   },
   stepText: {
     marginTop: 13,

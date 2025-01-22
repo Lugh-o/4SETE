@@ -1,17 +1,14 @@
 <?php
 
-use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\CameraController;
-use App\Http\Controllers\EtapaController;
 use App\Http\Controllers\FilmeController;
 use App\Http\Controllers\ProcessoController;
+use App\Http\Controllers\ProcessoEtapaController;
 use App\Http\Controllers\RevelacaoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules;
@@ -39,15 +36,13 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::delete('/revelacoes/{id}', [RevelacaoController::class, 'destroy']);
     Route::put('/revelacoes/{id}', [RevelacaoController::class, 'update']);
 
-    Route::get('/etapasProcesso/{id}', [EtapaController::class, 'index']);
+    Route::get('/etapasProcesso/{id}', [ProcessoEtapaController::class, 'index']);
 
     Route::get('/cameras', [CameraController::class, 'index']);
     Route::post('/cameras', [CameraController::class, 'store']);
     Route::get('/cameras/{id}', [CameraController::class, 'show']);
     Route::delete('/cameras/{id}', [CameraController::class, 'destroy']);
     Route::put('/cameras/{id}', [CameraController::class, 'update']);
-
-    Route::post("/test-csrf", fn() => [1, 2, 3]);
 
     Route::post("/logout", function (Request $request) {
         $request->user()->currentAccessToken()->delete();

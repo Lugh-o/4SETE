@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cameras', function (Blueprint $table) {
+        Schema::create('revelacaos', function (Blueprint $table) {
             $table->id();
-            $table->text('marca');
-            $table->text('modelo');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('filme_id')->references('id')->on('filmes')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('camera_id')->references('id')->on('cameras')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('processo_id')->references('id')->on('processos')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cameras');
+        Schema::dropIfExists('revelacaos');
     }
 };

@@ -1,12 +1,11 @@
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import AuthContext from "../context/AuthContext";
 import { logout } from "../services/AuthService";
 import Logo from "../components/Logo";
 
 import Card from "../components/Card";
-import PlaceholderIcon from "../assets/placeholder.svg";
 import AddIcon from "../assets/buttonIcons/add_2.svg";
 import CameraRollIcon from "../assets/buttonIcons/camera_roll.svg";
 import LightbulbIcon from "../assets/buttonIcons/emoji_objects.svg";
@@ -15,13 +14,71 @@ import LinkedCameraIcon from "../assets/buttonIcons/linked_camera.svg";
 import PhotoLibraryIcon from "../assets/buttonIcons/photo_library.svg";
 
 import Navbar from "../components/Navbar";
+import {
+  CameraService,
+  FilmeService,
+  RevelacaoService,
+  ProcessoService,
+} from "../services/CrudService";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
 
+  const [filme, setFilme] = useState("");
+  const [camera, setCamera] = useState("");
+  const [processo, setProcesso] = useState("");
+  const [revelacao, setRevelacao] = useState("");
+
   async function handleLogout() {
     await logout();
     setUser(null);
+  }
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchFilmes();
+      fetchCameras();
+      fetchProcessos();
+      fetchRevelacoes();
+    });
+  }, [navigation]);
+
+  async function fetchFilmes() {
+    try {
+      const response = await FilmeService.getAll();
+      setFilme(response.data.length);
+    } catch (error) {
+      console.error("Erro ao buscar filmes:", error.message);
+    }
+  }
+
+  async function fetchCameras() {
+    try {
+      const response = await CameraService.getAll();
+      setCamera(response.data.length);
+    } catch (error) {
+      console.error("Erro ao buscar cameras:", error.message);
+    }
+  }
+
+  async function fetchProcessos() {
+    try {
+      const response = await ProcessoService.getAll();
+      setProcesso(response.data.length);
+    } catch (error) {
+      console.error("Erro ao buscar processos:", error.message);
+    }
+  }
+
+  async function fetchRevelacoes() {
+    try {
+      const response = await RevelacaoService.getAll();
+      setRevelacao(response.data.length);
+    } catch (error) {
+      console.error("Erro ao buscar revelacoes:", error.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -40,7 +97,7 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         }
         bigText={"Meus Filmes"}
-        mediumText={"0 filmes"}
+        mediumText={filme + " filmes"}
         borderColor={"greenBorder"}
         onPress={() => {
           navigation.navigate("FilmesList");
@@ -48,11 +105,9 @@ export default function HomeScreen({ navigation }) {
       />
       <Card
         icon1={<LinkedCameraIcon width={32} height={32} />}
-        // icon2={<PlaceholderIcon width={16} height={16} />}
-        // icon3={<PlaceholderIcon width={16} height={16} />}
         icon4={<AddIcon width={24} height={24} />}
         bigText={"Minhas Câmeras"}
-        mediumText={"0 câmeras"}
+        mediumText={camera + " câmeras"}
         borderColor={"greenBorder"}
       />
 
@@ -67,8 +122,8 @@ export default function HomeScreen({ navigation }) {
             <AddIcon width={24} height={24} />
           </TouchableOpacity>
         }
-        bigText={"Meus Procesos"}
-        mediumText={"0 processos"}
+        bigText={"Meus Processos"}
+        mediumText={processo + " processos"}
         borderColor={"greenBorder"}
         onPress={() => {
           navigation.navigate("ProcessosList");
@@ -76,17 +131,24 @@ export default function HomeScreen({ navigation }) {
       />
       <Card
         icon1={<PhotoLibraryIcon width={32} height={32} />}
-        // icon2={<PlaceholderIcon width={16} height={16} />}
-        // icon3={<PlaceholderIcon width={16} height={16} />}
-        icon4={<AddIcon width={24} height={24} />}
+        icon4={
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("RevelacoesCreateForm");
+            }}
+          >
+            <AddIcon width={24} height={24} />
+          </TouchableOpacity>
+        }
         bigText={"Minhas Revelações"}
-        mediumText={"0 revelações"}
+        mediumText={revelacao + " revelações"}
         borderColor={"greenBorder"}
+        onPress={() => {
+          navigation.navigate("RevelacoesList");
+        }}
       />
       <Card
         icon1={<LightbulbIcon width={32} height={32} />}
-        // icon2={<PlaceholderIcon width={16} height={16} />}
-        // icon3={<PlaceholderIcon width={16} height={16} />}
         icon4={<AddIcon width={24} height={24} />}
         bigText={"Meus Aprendizados"}
         mediumText={"0 aprendizados"}

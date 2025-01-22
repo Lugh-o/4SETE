@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('etapas', function (Blueprint $table) {
+        Schema::create('processo_etapas', function (Blueprint $table) {
             $table->id();
             $table->text('nome');
             $table->integer('duracao');
             $table->integer('posicao');
-            $table->foreignId('processo_id')->constrained('processos'); // Foreign key para a tabela processos
+            $table->foreignId('processo_id')->references('id')->on('processos')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('etapas');
+        Schema::dropIfExists('processo_etapas');
     }
 };

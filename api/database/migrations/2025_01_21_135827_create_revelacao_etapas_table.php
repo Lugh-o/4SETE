@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cameras', function (Blueprint $table) {
+        Schema::create('revelacao_etapas', function (Blueprint $table) {
             $table->id();
-            $table->text('marca');
-            $table->text('modelo');
-            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->text('nome');
+            $table->integer('duracao');
+            $table->integer('posicao');
+            $table->foreignId('revelacao_id')->references('id')->on('revelacaos')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cameras');
+        Schema::dropIfExists('revelacao_etapas');
     }
 };

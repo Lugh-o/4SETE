@@ -12,7 +12,8 @@ class Revelacao extends Model
     protected $fillable = [
         'filme_id',
         'camera_id',
-        'processo_id'
+        'processo_id',
+        'user_id'
     ];
 
     public function filme()
@@ -28,5 +29,15 @@ class Revelacao extends Model
     public function processo()
     {
         return $this->belongsTo(Processo::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function revelacaoEtapa()
+    {
+        return $this->hasMany(RevelacaoEtapa::class);
     }
 }

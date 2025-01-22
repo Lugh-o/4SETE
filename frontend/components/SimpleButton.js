@@ -22,10 +22,14 @@ export default function SimpleButton({
 const styles = StyleSheet.create({
   touchable: {
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
+    justifyContent: "center"
+
   },
   buttonTitle: {
-    textAlign: "center",
+    // textAlign: "center",
+    // alignItems: "center",
+    // justifyContent: "center"
   },
   simples: {
     backgroundColor: "#fff",

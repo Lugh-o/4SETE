@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -13,19 +13,19 @@ import { FilmeService } from "../../services/CrudService";
 
 export default function FilmesCreateForm({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
-  const [marca, setMarca] = React.useState("");
-  const [modelo, setModelo] = React.useState("");
-  const [iso, setIso] = React.useState("");
+  const [marca, setMarca] = useState("");
+  const [modelo, setModelo] = useState("");
+  const [iso, setIso] = useState("");
 
-  const [validade, setValidade] = React.useState(new Date(Date.now()));
-  const [showValidade, setShowValidade] = React.useState(false);
-  const [dataCompra, setDataCompra] = React.useState(new Date(Date.now()));
-  const [showDataCompra, setShowDataCompra] = React.useState(false);
+  const [validade, setValidade] = useState(new Date(Date.now()));
+  const [showValidade, setShowValidade] = useState(false);
+  const [dataCompra, setDataCompra] = useState(new Date(Date.now()));
+  const [showDataCompra, setShowDataCompra] = useState(false);
 
-  const [loja, setLoja] = React.useState("");
-  const [valor, setValor] = React.useState("");
-  const [observacoes, setObservacoes] = React.useState("");
-  const [errors, setErrors] = React.useState({});
+  const [loja, setLoja] = useState("");
+  const [valor, setValor] = useState("");
+  const [observacoes, setObservacoes] = useState("");
+  const [errors, setErrors] = useState({});
 
   async function handleLogout() {
     await logout();

@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import { useState, useContext } from "react";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -16,36 +16,28 @@ import FormTextField from "../../components/FormTextField";
 import Delete from "../../assets/buttonIcons/delete.svg";
 
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
-import { EtapaService, ProcessoService } from "../../services/CrudService";
+import { ProcessoService } from "../../services/CrudService";
 
 export default function ProcessosEditForm({ navigation, route }) {
-  const processo = route.params.filme;
-
+  const processo = route.params.processo;
   const { user, setUser } = useContext(AuthContext);
-  const [nome, setNome] = React.useState(processo.nome);
-  const [marca, setMarca] = React.useState(processo.marca);
-  const [dataCompra, setDataCompra] = React.useState(
-    new Date(processo.data_compra)
-  );
-  const [validade, setValidade] = React.useState(new Date(processo.validade));
-  const [showValidade, setShowValidade] = React.useState(false);
-  const [showDataCompra, setShowDataCompra] = React.useState(false);
-  const [loja, setLoja] = React.useState(processo.loja);
-  const [valor, setValor] = React.useState(processo.valor);
-  const [quantidadeUsos, setQuantidadeUsos] = React.useState(
+  const [nome, setNome] = useState(processo.nome);
+  const [marca, setMarca] = useState(processo.marca);
+  const [dataCompra, setDataCompra] = useState(new Date(processo.data_compra));
+  const [validade, setValidade] = useState(new Date(processo.validade));
+  const [showValidade, setShowValidade] = useState(false);
+  const [showDataCompra, setShowDataCompra] = useState(false);
+  const [loja, setLoja] = useState(processo.loja);
+  const [valor, setValor] = useState(processo.valor);
+  const [quantidadeUsos, setQuantidadeUsos] = useState(
     processo.quantidade_usos
   );
-  const [observacoes, setObservacoes] = React.useState(processo.observacoes);
-  const [errors, setErrors] = React.useState({});
-  const [etapaList, setEtapaLista] = React.useState(processo.etapas);
-
-  async function handleLogout() {
-    await logout();
-    setUser(null);
-  }
+  const [observacoes, setObservacoes] = useState(processo.observacoes);
+  const [errors, setErrors] = useState({});
+  const [etapaList, setEtapaLista] = useState(processo.processo_etapa);
 
   async function addEtapa() {
-    var newEtapaList = etapaList;
+    var newEtapaList = [...etapaList];
     newEtapaList.push({
       nome: "",
       duracao: "",
@@ -56,13 +48,13 @@ export default function ProcessosEditForm({ navigation, route }) {
   }
 
   function handleStepDeletion(index) {
-    var newEtapaList = etapaList;
+    var newEtapaList = [...etapaList];
     newEtapaList.splice(index, 1);
     setEtapaLista(newEtapaList);
   }
 
-  async function postProcesso() {
-    const processo = {
+  async function editProcesso() {
+    const novoProcesso = {
       nome: nome,
       marca: marca,
       data_compra: dataCompra,
@@ -71,12 +63,11 @@ export default function ProcessosEditForm({ navigation, route }) {
       valor: valor,
       quantidade_usos: quantidadeUsos,
       observacoes: observacoes,
-      etapas: etapaList,
+      processo_etapas: etapaList,
     };
-    console.log(processo);
 
     try {
-      const response = await ProcessoService.create(processo);
+      const response = await ProcessoService.update(processo.id, novoProcesso);
 
       navigation.goBack();
     } catch (error) {
@@ -93,6 +84,12 @@ export default function ProcessosEditForm({ navigation, route }) {
     setShowDataCompra(false);
   }
 
+  function changeDictionaryValueByKey(array, index, key, value) {
+    var newArray = JSON.parse(JSON.stringify(array));
+    newArray[index][key] = value;
+    return newArray;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -104,8 +101,8 @@ export default function ProcessosEditForm({ navigation, route }) {
           <AddIcon width={32} height={32} transform="rotate(45)" />
         </TouchableOpacity>
         <SimpleButton
-          title="Adicionar Processo"
-          onPress={postProcesso}
+          title="Editar Processo"
+          onPress={editProcesso}
           buttonStyle={styles.botaoAddProcesso}
           textStyle={styles.textoAddProcesso}
         />
@@ -115,13 +112,13 @@ export default function ProcessosEditForm({ navigation, route }) {
         <View style={styles.campos}>
           <FormTextField
             label="Nome*"
-            value={nome}
+            defaultValue={nome}
             onChangeText={(text) => setNome(text)}
             errors={errors.nome}
           />
           <FormTextField
             label="Marca*"
-            value={marca}
+            defaultValue={marca}
             onChangeText={(text) => setMarca(text)}
             errors={errors.marca}
           />
@@ -134,7 +131,7 @@ export default function ProcessosEditForm({ navigation, route }) {
             <FormTextField
               label="Data de Compra*"
               editable={false}
-              value={dataCompra}
+              defaultValue={dataCompra}
               inputMode="numeric"
               errors={errors.dataCompra}
             />
@@ -157,7 +154,7 @@ export default function ProcessosEditForm({ navigation, route }) {
             <FormTextField
               label="Data de Validade*"
               editable={false}
-              value={validade}
+              defaultValue={validade}
               errors={errors.validade}
             />
           </TouchableOpacity>
@@ -173,25 +170,25 @@ export default function ProcessosEditForm({ navigation, route }) {
 
           <FormTextField
             label="Loja*"
-            value={loja}
+            defaultValue={loja}
             onChangeText={(text) => setLoja(text)}
             errors={errors.loja}
           />
           <FormTextField
             label="Valor*"
-            value={valor}
+            defaultValue={valor}
             onChangeText={(text) => setValor(text)}
             errors={errors.valor}
           />
           <FormTextField
             label="Quantidade de usos estimada*"
-            value={quantidadeUsos}
+            defaultValue={quantidadeUsos}
             onChangeText={(text) => setQuantidadeUsos(text)}
-            errors={errors.observacoes}
+            errors={errors.quantidadeUsos}
           />
           <FormTextField
             label="Observações*"
-            value={observacoes}
+            defaultValue={observacoes}
             onChangeText={(text) => setObservacoes(text)}
             errors={errors.observacoes}
           />
@@ -205,7 +202,7 @@ export default function ProcessosEditForm({ navigation, route }) {
         {Array.isArray(etapaList) &&
           etapaList.map((etapa, index) => (
             <View style={styles.stepContainer} key={index}>
-              <View>
+              <View style={styles.stepheader}>
                 <Text style={[styles.stepTitle]}>
                   {etapa.nome === "" ? "Nome da etapa" : etapaList[index].nome}
                 </Text>
@@ -215,13 +212,26 @@ export default function ProcessosEditForm({ navigation, route }) {
               </View>
               <FormTextField
                 label="Nome da etapa*"
-                // value={etapa.nome}
-                onChangeText={(text) => (etapaList[index].nome = text)}
+                // defaultValue={etapa.nome}
+                onChangeText={(text) =>
+                  setEtapaLista(
+                    changeDictionaryValueByKey(etapaList, index, "nome", text)
+                  )
+                }
               />
               <FormTextField
                 label="Tempo da etapa"
-                // value={etapaList[index].duracao}
-                onChangeText={(text) => (etapaList[index].duracao = text)}
+                defaultValue={etapa.duracao}
+                onChangeText={(text) =>
+                  setEtapaLista(
+                    changeDictionaryValueByKey(
+                      etapaList,
+                      index,
+                      "duracao",
+                      text
+                    )
+                  )
+                }
               />
             </View>
           ))}
@@ -239,6 +249,12 @@ export default function ProcessosEditForm({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  stepheader: {
+    flexDirection: "row",
+    alignContent: "center",
+    alignItems: "center",
+    width: 300,
+  },
   botaoAddProcesso: {
     backgroundColor: 0,
     margin: 0,
@@ -256,6 +272,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Inter-Regular",
     color: "#1a1a1a",
+    width: 284,
   },
   stepText: {
     marginTop: 13,

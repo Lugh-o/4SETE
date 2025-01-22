@@ -12,25 +12,25 @@ import ListCard from "../../components/ListCard";
 import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
-import { FilmeService } from "../../services/CrudService";
+import { RevelacaoService } from "../../services/CrudService";
 
-export default function FilmesScreen({ navigation }) {
+export default function RevelacoesScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
-  const [filmeList, setFilmeList] = useState([]);
+  const [revelacaoList, setRevelacaoList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      fetchFilmes();
+      fetchRevelacoes();
     });
   }, [navigation]);
 
-  async function fetchFilmes() {
+  async function fetchRevelacoes() {
     try {
-      const response = await FilmeService.getAll();
-      setFilmeList(response.data);
+      const response = await RevelacaoService.getAll();
+      setRevelacaoList(response.data);
     } catch (error) {
-      console.error("Erro ao buscar filmes:", error.message);
+      console.error("Erro ao buscar revelacoes:", error.message);
     } finally {
       setLoading(false);
     }
@@ -38,10 +38,10 @@ export default function FilmesScreen({ navigation }) {
 
   async function handleDelete(id) {
     try {
-      const response = await FilmeService.delete(id);
-      fetchFilmes();
+      const response = await RevelacaoService.delete(id);
+      fetchRevelacoes();
     } catch (error) {
-      console.error("Erro ao deletar filme:", error.message);
+      console.error("Erro ao deletar revelacao:", error.message);
     }
   }
 
@@ -61,23 +61,31 @@ export default function FilmesScreen({ navigation }) {
             buttonStyle={styles.botaoHome}
             textStyle={styles.textoHome}
           />
-          <Text style={styles.title}>Filmes</Text>
+          <Text style={styles.title}>Revelações</Text>
         </View>
 
         <ScrollView style={styles.scroll}>
-          {Array.isArray(filmeList) &&
-            filmeList.map((filme) => (
+          {Array.isArray(revelacaoList) &&
+            revelacaoList.map((revelacao) => (
               <ListCard
-                key={filme.id}
-                bigText={filme.marca + " " + filme.modelo}
-                mediumText={"Validade: " + filme.validade}
+                key={revelacao["id"]}
+                bigText={revelacao["filme"][0]["marca"]}
+                mediumText={
+                  revelacao["camera"][0]["marca"] +
+                  " " +
+                  revelacao["camera"][0]["modelo"] +
+                  " " +
+                  revelacao["processo"][0]["nome"]
+                }
                 icon2={<Edit width={16} height={16} />}
                 icon3={<Delete />}
                 borderColor={"greenBorder"}
                 style={{ marginBottom: 12 }}
-                onDelete={() => handleDelete(filme.id)}
+                onDelete={() => handleDelete(revelacao["id"])}
                 onEdit={() =>
-                  navigation.navigate("FilmesEditForm", { filme: filme })
+                  navigation.navigate("RevelacoesEditForm", {
+                    revelacao: revelacao,
+                  })
                 }
               />
             ))}

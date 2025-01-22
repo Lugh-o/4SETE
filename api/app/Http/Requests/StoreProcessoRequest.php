@@ -29,10 +29,10 @@ class StoreProcessoRequest extends FormRequest
             'loja' => ['required', 'string'],
             'valor' => ['required', 'string'],
             'quantidade_usos' => ['required', 'integer'],
-            'etapas' => ['required', 'array'],
-            'etapas.*.nome' => ['required', 'string'],
-            'etapas.*.duracao' => ['required', 'integer'],
-            'etapas.*.posicao' => ['required', 'integer'],
+            'processo_etapas' => ['required', 'array'],
+            'processo_etapas.*.nome' => ['required', 'string'],
+            'processo_etapas.*.duracao' => ['required', 'integer'],
+            'processo_etapas.*.posicao' => ['required', 'integer'],
         ];
     }
 }

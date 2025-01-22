@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('loja');
             $table->text('valor');
             $table->text('observacoes');
-            $table->foreignId('user_id')->constrained('users'); // Foreign key para a tabela users
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

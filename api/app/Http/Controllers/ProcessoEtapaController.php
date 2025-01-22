@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Etapa;
+use App\Models\ProcessoEtapa;
 
-class EtapaController extends Controller
+class ProcessoEtapaController extends Controller
 {
     /**
      * Lista de etapas de um processo.
@@ -12,7 +12,7 @@ class EtapaController extends Controller
     public function index($id)
     {
         try {
-            $etapas = Etapa::where('processo_id', $id)->get();
+            $etapas = ProcessoEtapa::where('processo_id', $id)->get();
             return response()->json([
                 'data' => $etapas
             ], 200);

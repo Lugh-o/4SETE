@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, ScrollView } from "react-native";
-import React, { useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 
 import AuthContext from "../../context/AuthContext";
 import { logout } from "../../services/AuthService";
@@ -16,13 +16,15 @@ import { ProcessoService } from "../../services/CrudService";
 
 export default function ProcessosScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
-  const [processoList, setProcessoList] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [processoList, setProcessoList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  async function handleLogout() {
-    await logout();
-    setUser(null);
-  }
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchProcessos();
+    });
+  }, [navigation]);
+
   async function fetchProcessos() {
     try {
       const response = await ProcessoService.getAll();
@@ -42,8 +44,6 @@ export default function ProcessosScreen({ navigation }) {
       console.error("Erro ao deletar processo:", error.message);
     }
   }
-
-  fetchProcessos();
 
   return (
     <View style={styles.container}>
@@ -68,7 +68,6 @@ export default function ProcessosScreen({ navigation }) {
           {Array.isArray(processoList) &&
             processoList.map((processo) => (
               <ListCard
-                // TODO ver isso aqui
                 key={processo.id}
                 bigText={processo.nome}
                 mediumText={"0 Revelações, Validade: " + processo.validade}

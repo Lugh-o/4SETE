@@ -16,6 +16,11 @@ import ProcessosScreen from "./screens/processos/ProcessosScreen";
 import ProcessosCreateForm from "./screens/processos/ProcessosCreateForm";
 import ProcessosEditForm from "./screens/processos/ProcessosEditForm";
 
+import RevelacoesScreen from "./screens/revelacao/RevelacoesScreen";
+import RevelacoesCreateForm from "./screens/revelacao/RevelacoesCreateForm";
+import RevelacoesEditForm from "./screens/revelacao/RevelacoesEditForm";
+import CronometroScreen from "./screens/CronometroScreen";
+
 import AuthContext from "./context/AuthContext";
 import { loadUser } from "./services/AuthService";
 
@@ -68,6 +73,23 @@ export default function App() {
               <Stack.Screen
                 name="ProcessosEditForm"
                 component={ProcessosEditForm}
+              />
+
+              <Stack.Screen
+                name="RevelacoesList"
+                component={RevelacoesScreen}
+              />
+              <Stack.Screen
+                name="RevelacoesCreateForm"
+                component={RevelacoesCreateForm}
+              />
+              <Stack.Screen
+                name="RevelacoesEditForm"
+                component={RevelacoesEditForm}
+              />
+              <Stack.Screen
+                name="CronometroScreen"
+                component={CronometroScreen}
               />
             </>
           ) : (

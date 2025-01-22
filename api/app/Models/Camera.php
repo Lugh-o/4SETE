@@ -19,4 +19,9 @@ class Camera extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
+    public function revelacao()
+    {
+        return $this->hasMany(Revelacao::class);
+    }
 }
