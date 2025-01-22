@@ -48,6 +48,7 @@ class ProcessoController extends Controller
             $processo->loja = $filteredData['processo']["loja"];
             $processo->valor = $filteredData['processo']["valor"];
             $processo->quantidade_usos = $filteredData['processo']["quantidade_usos"];
+            $processo->observacoes = $filteredData['processo']["observacoes"];
             $processo->user_id = $idUser;
             $processo->save();
 
@@ -142,6 +143,7 @@ class ProcessoController extends Controller
             'valor',
             'quantidade_usos',
             'user_id',
+            'observacoes',
             'processo_etapas'
         ]);
 

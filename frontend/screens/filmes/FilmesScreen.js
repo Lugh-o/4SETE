@@ -14,19 +14,20 @@ import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import { FilmeService } from "../../services/CrudService";
 import SplashScreen from "../SplashScreen";
+import AddIcon from "../../assets/add_green.svg";
 
 export default function FilmesScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
   const [filmeList, setFilmeList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [teste, setTeste] = useState('');
+  const [teste, setTeste] = useState("");
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       setLoading(true);
       fetchFilmes();
-      
     });
+    return unsubscribe;
   }, [navigation]);
 
   async function fetchFilmes() {
@@ -73,21 +74,31 @@ export default function FilmesScreen({ navigation }) {
 
         <ScrollView style={styles.scroll}>
           {Array.isArray(filmeList) &&
-          filmeList.map((filme) => (
-            <ListCard
-              key={filme.id}
-              bigText={filme.marca + " " + filme.modelo}
-              mediumText={"Validade: " + filme.validade.substring(0, 10)}
-              icon2={<Edit width={16} height={16} />}
-              icon3={<Delete />}
-              borderColor={"greenBorder"}
-              style={{ marginBottom: 12 }}
-              onDelete={() => handleDelete(filme.id)}
-              onEdit={() =>
-                navigation.navigate("FilmesEditForm", { filme: filme })
-              }
-            />
-          ))}
+            filmeList.map((filme) => (
+              <ListCard
+                key={filme.id}
+                bigText={filme.marca + " " + filme.modelo}
+                mediumText={"Validade: " + filme.validade.substring(0, 10)}
+                icon2={<Edit width={16} height={16} />}
+                icon3={<Delete />}
+                borderColor={"greenBorder"}
+                style={{ marginBottom: 12 }}
+                onDelete={() => handleDelete(filme.id)}
+                onEdit={() =>
+                  navigation.navigate("FilmesEditForm", { filme: filme })
+                }
+              />
+            ))}
+          <SimpleButton
+            title="Adicionar Filme"
+            onPress={() => {
+              navigation.navigate("FilmesCreateForm");
+            }}
+            buttonStyle={styles.botaoAddEtapa}
+            textStyle={styles.textoAddEtapa}
+            rightIcon={<AddIcon width={16} height={16} style={{alignSelf:"center"}}/>}
+            otherStyle={styles.otherStyle}
+          />
         </ScrollView>
       </View>
       <Navbar />
@@ -96,6 +107,22 @@ export default function FilmesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  otherStyle: {
+    gap: 12
+  },
+  botaoAddEtapa: {
+    backgroundColor: 0,
+    margin: 0,
+    padding: 12,
+    marginTop: 24,
+    marginRight: 20,
+    alignSelf: "flex-end",
+  },
+  textoAddEtapa: {
+    margin: 0,
+    padding: 0,
+    color: "#006A04",
+  },
   main: {
     position: "absolute",
     top: 54,

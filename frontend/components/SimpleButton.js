@@ -7,13 +7,15 @@ export default function SimpleButton({
   rightIcon,
   textStyle,
   buttonStyle,
+  otherStyle,
   ...rest
 }) {
   return (
     <View style={[styles.simples, buttonStyle]}>
-      <TouchableOpacity onPress={onPress} style={[styles.touchable]}>
+      <TouchableOpacity onPress={onPress} style={[styles.touchable, otherStyle]}>
         {icon}
-        <Text style={[styles.buttonTitle, textStyle]}>{title}{rightIcon}</Text>
+        <Text style={[styles.buttonTitle, textStyle]}>{title}</Text>
+        {rightIcon}
       </TouchableOpacity>
     </View>
   );
@@ -24,7 +26,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // alignItems: "center",
     justifyContent: "center"
-
   },
   buttonTitle: {
     // textAlign: "center",

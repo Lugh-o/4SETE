@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -13,7 +13,7 @@ import { FilmeService } from "../../services/CrudService";
 
 export default function FilmesEditForm({ navigation, route }) {
   const filme = route.params.filme;
-  
+
   const { user, setUser } = useContext(AuthContext);
   const [marca, setMarca] = useState(filme.marca);
   const [modelo, setModelo] = useState(filme.modelo);
@@ -21,9 +21,7 @@ export default function FilmesEditForm({ navigation, route }) {
 
   const [validade, setValidade] = useState(new Date(filme.validade));
   const [showValidade, setShowValidade] = useState(false);
-  const [dataCompra, setDataCompra] = useState(
-    new Date(filme.data_compra)
-  );
+  const [dataCompra, setDataCompra] = useState(new Date(filme.data_compra));
   const [showDataCompra, setShowDataCompra] = useState(false);
 
   const [loja, setLoja] = useState(filme.loja);
@@ -93,24 +91,20 @@ export default function FilmesEditForm({ navigation, route }) {
         />
         <FormTextField
           label="ISO*"
-          value={iso}
+          value={String(iso)}
           inputMode="numeric"
           onChangeText={(text) => setIso(text)}
           errors={errors.iso}
         />
 
-        <TouchableOpacity
+        <SimpleButton
+          title={validade.toISOString().split("T")[0]}
           onPress={() => {
             setShowValidade(true);
           }}
-        >
-          <FormTextField
-            label="Data de Validade*"
-            editable={false}
-            value={validade}
-            errors={errors.validade}
-          />
-        </TouchableOpacity>
+          textStyle={styles.buttonTextStyle}
+          otherStyle={styles.buttonContainerStyle}
+        />
         {showValidade && (
           <DateTimePicker
             testID="validadePicker"
@@ -121,28 +115,24 @@ export default function FilmesEditForm({ navigation, route }) {
           />
         )}
 
-        <TouchableOpacity
+        <SimpleButton
+          title={dataCompra.toISOString().split("T")[0]}
           onPress={() => {
             setShowDataCompra(true);
           }}
-        >
-          <FormTextField
-            label="Data de Compra*"
-            editable={false}
+          textStyle={styles.buttonTextStyle}
+          otherStyle={styles.buttonContainerStyle}
+        />
+        {showDataCompra && (
+          <DateTimePicker
+            testID="dataCompraPicker"
             value={dataCompra}
-            inputMode="numeric"
-            errors={errors.dataCompra}
+            mode={"date"}
+            is24Hour={true}
+            onChange={changeDataCompra}
           />
-          {showDataCompra && (
-            <DateTimePicker
-              testID="dataCompraPicker"
-              value={dataCompra}
-              mode={"date"}
-              is24Hour={true}
-              onChange={changeDataCompra}
-            />
-          )}
-        </TouchableOpacity>
+        )}
+
         <FormTextField
           label="Loja*"
           value={loja}
@@ -167,6 +157,14 @@ export default function FilmesEditForm({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  buttonTextStyle: {
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+    color: "#1a1a1a",
+  },
+  buttonContainerStyle: {
+    justifyContent: "left",
+  },
   botaoAddFilme: {
     backgroundColor: 0,
   },

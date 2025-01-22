@@ -25,6 +25,7 @@ import {
 } from "../../services/CrudService";
 import TextButton from "../../components/TextButton";
 import SplashScreen from "../SplashScreen";
+import TimeInput from "../../components/TimeInput";
 
 export default function RevelacoesEditForm({ navigation, route }) {
   const revelacao = route.params.revelacao;
@@ -173,6 +174,26 @@ export default function RevelacoesEditForm({ navigation, route }) {
       processo: processoList[processo]["id"],
     });
   }
+
+  function stringToSec(string) {
+    const [minutes, seconds] = string.split(":");
+    const totalSeconds = +minutes * 60 + +seconds;
+    return totalSeconds;
+  }
+
+  const toHHMMSS = (secs) => {
+    const secNum = parseInt(secs.toString(), 10);
+    const hours = Math.floor(secNum / 3600);
+    const minutes = Math.floor(secNum / 60) % 60;
+    const seconds = secNum % 60;
+
+    return [hours, minutes, seconds]
+      .map((val) => (val < 10 ? `0${val}` : val))
+      .filter((val, index) => val !== "00" || index > 0)
+      .join(":")
+      .replace(/^0/, "");
+  };
+
   if (loading) return <SplashScreen />;
 
   return (
@@ -260,23 +281,29 @@ export default function RevelacoesEditForm({ navigation, route }) {
                       <Delete width={16} height={16} />
                     </TouchableOpacity>
 
-                    <FormTextField
-                      label="Tempo da etapa"
-                      defaultValue={String(etapa.duracao)}
+                    <TimeInput
+                      label="Duração da etapa"
+                      value={toHHMMSS(etapa.duracao || 0)}
                       onChangeText={(text) =>
                         setCustomEtapas(
                           changeDictionaryValueByKey(
                             customEtapas,
                             index,
                             "duracao",
-                            text == "" ? etapa.duracao : text
+                            stringToSec(text)
                           )
                         )
                       }
                     />
-                    <TouchableOpacity onPress={() => handleStepDeletion(index)}>
-                      <Delete width={16} height={16} />
-                    </TouchableOpacity>
+                    {etapa.posicao == 1 ? (
+                      <></>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => handleStepDeletion(index)}
+                      >
+                        <Delete />
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               ))}

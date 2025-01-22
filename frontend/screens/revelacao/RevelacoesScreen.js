@@ -13,6 +13,7 @@ import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import { RevelacaoService } from "../../services/CrudService";
 import SplashScreen from "../SplashScreen";
+import AddIcon from "../../assets/add_green.svg";
 
 export default function RevelacoesScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -24,6 +25,7 @@ export default function RevelacoesScreen({ navigation }) {
       setLoading(true);
       fetchRevelacoes();
     });
+    return unsubscribe; // Garante que o listener será limpo ao desmontar o componente
   }, [navigation]);
 
   async function fetchRevelacoes() {
@@ -93,6 +95,18 @@ export default function RevelacoesScreen({ navigation }) {
                 }
               />
             ))}
+          <SimpleButton
+            title="Adicionar Revelação"
+            onPress={() => {
+              navigation.navigate("RevelacoesCreateForm");
+            }}
+            buttonStyle={styles.botaoAddEtapa}
+            textStyle={styles.textoAddEtapa}
+            rightIcon={
+              <AddIcon width={16} height={16} style={{ alignSelf: "center" }} />
+            }
+            otherStyle={styles.otherStyle}
+          />
         </ScrollView>
       </View>
       <Navbar />
@@ -101,6 +115,22 @@ export default function RevelacoesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  otherStyle: {
+    gap: 12,
+  },
+  botaoAddEtapa: {
+    backgroundColor: 0,
+    margin: 0,
+    padding: 12,
+    marginTop: 24,
+    marginRight: 20,
+    alignSelf: "flex-end",
+  },
+  textoAddEtapa: {
+    margin: 0,
+    padding: 0,
+    color: "#006A04",
+  },
   main: {
     position: "absolute",
     top: 54,
@@ -122,7 +152,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignSelf: "center",
-    gap: 163,
+    gap: 118,
     padding: 0,
     margin: 0,
     marginTop: 12,

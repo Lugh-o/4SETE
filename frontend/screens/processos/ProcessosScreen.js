@@ -13,6 +13,7 @@ import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import { ProcessoService } from "../../services/CrudService";
 import SplashScreen from "../SplashScreen";
+import AddIcon from "../../assets/add_green.svg";
 
 export default function ProcessosScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -24,6 +25,7 @@ export default function ProcessosScreen({ navigation }) {
       setLoading(true);
       fetchProcessos();
     });
+    return unsubscribe; // Garante que o listener será limpo ao desmontar o componente
   }, [navigation]);
 
   async function fetchProcessos() {
@@ -91,6 +93,18 @@ export default function ProcessosScreen({ navigation }) {
                 }
               />
             ))}
+          <SimpleButton
+            title="Adicionar Processo"
+            onPress={() => {
+              navigation.navigate("ProcessosCreateForm");
+            }}
+            buttonStyle={styles.botaoAddEtapa}
+            textStyle={styles.textoAddEtapa}
+            rightIcon={
+              <AddIcon width={16} height={16} style={{ alignSelf: "center" }} />
+            }
+            otherStyle={styles.otherStyle}
+          />
         </ScrollView>
       </View>
       <Navbar />
@@ -99,6 +113,22 @@ export default function ProcessosScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  otherStyle: {
+    gap: 12,
+  },
+  botaoAddEtapa: {
+    backgroundColor: 0,
+    margin: 0,
+    padding: 12,
+    marginTop: 24,
+    marginRight: 20,
+    alignSelf: "flex-end",
+  },
+  textoAddEtapa: {
+    margin: 0,
+    padding: 0,
+    color: "#006A04",
+  },
   main: {
     position: "absolute",
     top: 54,

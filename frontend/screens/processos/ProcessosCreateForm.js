@@ -15,17 +15,24 @@ import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
 import Delete from "../../assets/buttonIcons/delete.svg";
 
-import AddIcon from "../../assets/buttonIcons/add_2.svg";
+import AddIcon from "../../assets/buttonIcons/add_2.svg"
+import AddIconGreen from "../../assets/add_green.svg";
 import { ProcessoService } from "../../services/CrudService";
+import TimeInput from "../../components/TimeInput";
 
 export default function ProcessosCreateForm({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
   const [nome, setNome] = useState("");
   const [marca, setMarca] = useState("");
-  const [dataCompra, setDataCompra] = useState(new Date(Date.now()));
+
   const [validade, setValidade] = useState(new Date(Date.now()));
   const [showValidade, setShowValidade] = useState(false);
+  const [validadeSelected, setValidadeSelected] = useState(false);
+
+  const [dataCompra, setDataCompra] = useState(new Date(Date.now()));
   const [showDataCompra, setShowDataCompra] = useState(false);
+  const [dataCompraSelected, setDataCompraSelected] = useState(false);
+
   const [loja, setLoja] = useState("");
   const [valor, setValor] = useState("");
   const [quantidadeUsos, setQuantidadeUsos] = useState("");
@@ -41,18 +48,13 @@ export default function ProcessosCreateForm({ navigation }) {
     },
   ]);
 
-  async function handleLogout() {
-    await logout();
-    setUser(null);
-  }
-
   async function addEtapa() {
     var newEtapaList = [...etapaList];
     newEtapaList.push({
       nome: "",
       duracao: "",
       processo_id: "",
-      posicao: etapaList.length,
+      posicao: etapaList.length + 1,
     });
     setEtapaLista(newEtapaList);
   }
@@ -78,7 +80,6 @@ export default function ProcessosCreateForm({ navigation }) {
 
     try {
       const response = await ProcessoService.create(processo);
-
       navigation.goBack();
     } catch (error) {
       console.error(error.response.data);
@@ -88,17 +89,25 @@ export default function ProcessosCreateForm({ navigation }) {
   function changeValidade(event, selectedDate) {
     setValidade(selectedDate);
     setShowValidade(false);
+    setValidadeSelected(true);
   }
 
   function changeDataCompra(event, selectedDate) {
     setDataCompra(selectedDate);
     setShowDataCompra(false);
+    setDataCompraSelected(true);
   }
-  
+
   function changeDictionaryValueByKey(array, index, key, value) {
     var newArray = JSON.parse(JSON.stringify(array));
     newArray[index][key] = value;
     return newArray;
+  }
+
+  function stringToSec(string) {
+    const [minutes, seconds] = string.split(":");
+    const totalSeconds = +minutes * 60 + +seconds;
+    return totalSeconds;
   }
 
   return (
@@ -134,41 +143,40 @@ export default function ProcessosCreateForm({ navigation }) {
             errors={errors.marca}
           />
 
-          <TouchableOpacity
+          <SimpleButton
+            title={
+              dataCompraSelected
+                ? dataCompra.toISOString().split("T")[0]
+                : "Data de Compra*"
+            }
             onPress={() => {
               setShowDataCompra(true);
             }}
-          >
-            <FormTextField
-              label="Data de Compra*"
-              editable={false}
+            textStyle={styles.buttonTextStyle}
+            otherStyle={styles.buttonContainerStyle}
+          />
+          {showDataCompra && (
+            <DateTimePicker
+              testID="dataCompraPicker"
               value={dataCompra}
-              inputMode="numeric"
-              errors={errors.dataCompra}
+              mode={"date"}
+              is24Hour={true}
+              onChange={changeDataCompra}
             />
-            {showDataCompra && (
-              <DateTimePicker
-                testID="dataCompraPicker"
-                value={dataCompra}
-                mode={"date"}
-                is24Hour={true}
-                onChange={changeDataCompra}
-              />
-            )}
-          </TouchableOpacity>
+          )}
 
-          <TouchableOpacity
+          <SimpleButton
+            title={
+              validadeSelected
+                ? validade.toISOString().split("T")[0]
+                : "Data de Validade*"
+            }
             onPress={() => {
               setShowValidade(true);
             }}
-          >
-            <FormTextField
-              label="Data de Validade*"
-              editable={false}
-              value={validade}
-              errors={errors.validade}
-            />
-          </TouchableOpacity>
+            textStyle={styles.buttonTextStyle}
+            otherStyle={styles.buttonContainerStyle}
+          />
           {showValidade && (
             <DateTimePicker
               testID="validadePicker"
@@ -194,6 +202,7 @@ export default function ProcessosCreateForm({ navigation }) {
           <FormTextField
             label="Quantidade de usos estimada*"
             value={quantidadeUsos}
+            inputMode="numeric"
             onChangeText={(text) => setQuantidadeUsos(text)}
             errors={errors.observacoes}
           />
@@ -217,9 +226,14 @@ export default function ProcessosCreateForm({ navigation }) {
                 <Text style={[styles.stepTitle]}>
                   {etapa.nome === "" ? "Nome da etapa" : etapaList[index].nome}
                 </Text>
-                <TouchableOpacity onPress={() => handleStepDeletion(index)}>
-                  <Delete />
-                </TouchableOpacity>
+
+                {etapa.posicao == 1 ? (
+                  <></>
+                ) : (
+                  <TouchableOpacity onPress={() => handleStepDeletion(index)}>
+                    <Delete />
+                  </TouchableOpacity>
+                )}
               </View>
               <FormTextField
                 label="Nome da etapa*"
@@ -230,16 +244,16 @@ export default function ProcessosCreateForm({ navigation }) {
                   )
                 }
               />
-              <FormTextField
-                label="Tempo da etapa"
-                // value={etapaList[index].duracao}
+
+              <TimeInput
+                label="Duração da etapa"
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(
                       etapaList,
                       index,
                       "duracao",
-                      text
+                      stringToSec(text)
                     )
                   )
                 }
@@ -251,7 +265,10 @@ export default function ProcessosCreateForm({ navigation }) {
           onPress={addEtapa}
           buttonStyle={styles.botaoAddEtapa}
           textStyle={styles.textoAddEtapa}
-          rightIcon={<AddIcon width={16} height={16} />}
+          rightIcon={
+            <AddIconGreen width={16} height={16} style={{ alignSelf: "center" }} />
+          }
+          otherStyle={styles.otherStyle}
         />
       </ScrollView>
     </View>
@@ -259,6 +276,14 @@ export default function ProcessosCreateForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  buttonTextStyle: {
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+    color: "#1a1a1a",
+  },
+  buttonContainerStyle: {
+    justifyContent: "left",
+  },
   stepheader: {
     flexDirection: "row",
     alignContent: "center",
@@ -295,14 +320,15 @@ const styles = StyleSheet.create({
   steps: {
     marginTop: 45,
   },
+  otherStyle: {
+    gap: 12,
+  },
   botaoAddEtapa: {
     backgroundColor: 0,
     margin: 0,
     padding: 12,
     marginTop: 24,
     alignSelf: "flex-end",
-    justifyContent: "center",
-    alignItems: "center",
   },
   textoAddEtapa: {
     margin: 0,

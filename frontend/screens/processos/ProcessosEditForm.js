@@ -14,9 +14,11 @@ import { logout } from "../../services/AuthService";
 import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
 import Delete from "../../assets/buttonIcons/delete.svg";
+import AddIconGreen from "../../assets/add_green.svg";
 
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import { ProcessoService } from "../../services/CrudService";
+import TimeInput from "../../components/TimeInput";
 
 export default function ProcessosEditForm({ navigation, route }) {
   const processo = route.params.processo;
@@ -42,7 +44,7 @@ export default function ProcessosEditForm({ navigation, route }) {
       nome: "",
       duracao: "",
       processo_id: "",
-      posicao: etapaList.length,
+      posicao: etapaList.length + 1,
     });
     setEtapaLista(newEtapaList);
   }
@@ -90,6 +92,25 @@ export default function ProcessosEditForm({ navigation, route }) {
     return newArray;
   }
 
+  function stringToSec(string) {
+    const [minutes, seconds] = string.split(":");
+    const totalSeconds = +minutes * 60 + +seconds;
+    return totalSeconds;
+  }
+
+  const toHHMMSS = (secs) => {
+    const secNum = parseInt(secs.toString(), 10);
+    const hours = Math.floor(secNum / 3600);
+    const minutes = Math.floor(secNum / 60) % 60;
+    const seconds = secNum % 60;
+
+    return [hours, minutes, seconds]
+      .map((val) => (val < 10 ? `0${val}` : val))
+      .filter((val, index) => val !== "00" || index > 0)
+      .join(":")
+      .replace(/^0/, "");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -123,41 +144,32 @@ export default function ProcessosEditForm({ navigation, route }) {
             errors={errors.marca}
           />
 
-          <TouchableOpacity
+          <SimpleButton
+            title={dataCompra.toISOString().split("T")[0]}
             onPress={() => {
               setShowDataCompra(true);
             }}
-          >
-            <FormTextField
-              label="Data de Compra*"
-              editable={false}
-              defaultValue={dataCompra}
-              inputMode="numeric"
-              errors={errors.dataCompra}
+            textStyle={styles.buttonTextStyle}
+            otherStyle={styles.buttonContainerStyle}
+          />
+          {showDataCompra && (
+            <DateTimePicker
+              testID="dataCompraPicker"
+              value={dataCompra}
+              mode={"date"}
+              is24Hour={true}
+              onChange={changeDataCompra}
             />
-            {showDataCompra && (
-              <DateTimePicker
-                testID="dataCompraPicker"
-                value={dataCompra}
-                mode={"date"}
-                is24Hour={true}
-                onChange={changeDataCompra}
-              />
-            )}
-          </TouchableOpacity>
+          )}
 
-          <TouchableOpacity
+          <SimpleButton
+            title={validade.toISOString().split("T")[0]}
             onPress={() => {
               setShowValidade(true);
             }}
-          >
-            <FormTextField
-              label="Data de Validade*"
-              editable={false}
-              defaultValue={validade}
-              errors={errors.validade}
-            />
-          </TouchableOpacity>
+            textStyle={styles.buttonTextStyle}
+            otherStyle={styles.buttonContainerStyle}
+          />
           {showValidade && (
             <DateTimePicker
               testID="validadePicker"
@@ -182,9 +194,8 @@ export default function ProcessosEditForm({ navigation, route }) {
           />
           <FormTextField
             label="Quantidade de usos estimada*"
-            defaultValue={quantidadeUsos}
+            defaultValue={String(quantidadeUsos)}
             onChangeText={(text) => setQuantidadeUsos(text)}
-            errors={errors.quantidadeUsos}
           />
           <FormTextField
             label="Observações*"
@@ -206,29 +217,33 @@ export default function ProcessosEditForm({ navigation, route }) {
                 <Text style={[styles.stepTitle]}>
                   {etapa.nome === "" ? "Nome da etapa" : etapaList[index].nome}
                 </Text>
-                <TouchableOpacity onPress={() => handleStepDeletion(index)}>
-                  <Delete />
-                </TouchableOpacity>
+                {etapa.posicao == 1 ? (
+                  <></>
+                ) : (
+                  <TouchableOpacity onPress={() => handleStepDeletion(index)}>
+                    <Delete />
+                  </TouchableOpacity>
+                )}
               </View>
               <FormTextField
                 label="Nome da etapa*"
-                // defaultValue={etapa.nome}
+                defaultValue={etapa.nome}
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(etapaList, index, "nome", text)
                   )
                 }
               />
-              <FormTextField
-                label="Tempo da etapa"
-                defaultValue={etapa.duracao}
+              <TimeInput
+                label="Duração da etapa"
+                value={toHHMMSS(etapa.duracao || 0)}
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(
                       etapaList,
                       index,
                       "duracao",
-                      text
+                      stringToSec(text)
                     )
                   )
                 }
@@ -241,7 +256,14 @@ export default function ProcessosEditForm({ navigation, route }) {
           onPress={addEtapa}
           buttonStyle={styles.botaoAddEtapa}
           textStyle={styles.textoAddEtapa}
-          rightIcon={<AddIcon width={16} height={16} />}
+          rightIcon={
+            <AddIconGreen
+              width={16}
+              height={16}
+              style={{ alignSelf: "center" }}
+            />
+          }
+          otherStyle={styles.otherStyle}
         />
       </ScrollView>
     </View>
@@ -249,6 +271,14 @@ export default function ProcessosEditForm({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  buttonTextStyle: {
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+    color: "#1a1a1a",
+  },
+  buttonContainerStyle: {
+    justifyContent: "left",
+  },
   stepheader: {
     flexDirection: "row",
     alignContent: "center",
@@ -285,14 +315,15 @@ const styles = StyleSheet.create({
   steps: {
     marginTop: 45,
   },
+  otherStyle: {
+    gap: 12,
+  },
   botaoAddEtapa: {
     backgroundColor: 0,
     margin: 0,
     padding: 12,
     marginTop: 24,
     alignSelf: "flex-end",
-    justifyContent: "center",
-    alignItems: "center",
   },
   textoAddEtapa: {
     margin: 0,

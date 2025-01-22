@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('validade');
             $table->text('loja');
             $table->text('valor');
+            $table->text('observacoes');
             $table->integer('quantidade_usos');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

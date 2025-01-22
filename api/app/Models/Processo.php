@@ -17,6 +17,7 @@ class Processo extends Model
         'loja',
         'valor',
         'quantidade_usos',
+        'observacoes',
         'user_id'
     ];
 

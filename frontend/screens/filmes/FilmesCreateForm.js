@@ -19,18 +19,16 @@ export default function FilmesCreateForm({ navigation }) {
 
   const [validade, setValidade] = useState(new Date(Date.now()));
   const [showValidade, setShowValidade] = useState(false);
+  const [validadeSelected, setValidadeSelected] = useState(false);
+
   const [dataCompra, setDataCompra] = useState(new Date(Date.now()));
   const [showDataCompra, setShowDataCompra] = useState(false);
+  const [dataCompraSelected, setDataCompraSelected] = useState(false);
 
   const [loja, setLoja] = useState("");
   const [valor, setValor] = useState("");
   const [observacoes, setObservacoes] = useState("");
   const [errors, setErrors] = useState({});
-
-  async function handleLogout() {
-    await logout();
-    setUser(null);
-  }
 
   async function postFilme() {
     const filme = {
@@ -43,10 +41,8 @@ export default function FilmesCreateForm({ navigation }) {
       valor: valor,
       observacoes: observacoes,
     };
-
     try {
       const response = await FilmeService.create(filme);
-
       navigation.goBack();
     } catch (error) {
       console.error(error.response?.data || error.message);
@@ -56,10 +52,13 @@ export default function FilmesCreateForm({ navigation }) {
   function changeValidade(event, selectedDate) {
     setValidade(selectedDate);
     setShowValidade(false);
+    setValidadeSelected(true);
   }
+  
   function changeDataCompra(event, selectedDate) {
     setDataCompra(selectedDate);
     setShowDataCompra(false);
+    setDataCompraSelected(true);
   }
 
   return (
@@ -101,18 +100,18 @@ export default function FilmesCreateForm({ navigation }) {
           errors={errors.iso}
         />
 
-        <TouchableOpacity
+        <SimpleButton
+          title={
+            validadeSelected
+              ? validade.toISOString().split("T")[0]
+              : "Data de Validade*"
+          }
           onPress={() => {
             setShowValidade(true);
           }}
-        >
-          <FormTextField
-            label="Data de Validade*"
-            editable={false}
-            value={validade}
-            errors={errors.validade}
-          />
-        </TouchableOpacity>
+          textStyle={styles.buttonTextStyle}
+          otherStyle={styles.buttonContainerStyle}
+        />
         {showValidade && (
           <DateTimePicker
             testID="validadePicker"
@@ -123,28 +122,28 @@ export default function FilmesCreateForm({ navigation }) {
           />
         )}
 
-        <TouchableOpacity
+        <SimpleButton
+          title={
+            dataCompraSelected
+              ? dataCompra.toISOString().split("T")[0]
+              : "Data de Compra*"
+          }
           onPress={() => {
             setShowDataCompra(true);
           }}
-        >
-          <FormTextField
-            label="Data de Compra*"
-            editable={false}
+          textStyle={styles.buttonTextStyle}
+          otherStyle={styles.buttonContainerStyle}
+        />
+        {showDataCompra && (
+          <DateTimePicker
+            testID="dataCompraPicker"
             value={dataCompra}
-            inputMode="numeric"
-            errors={errors.dataCompra}
+            mode={"date"}
+            is24Hour={true}
+            onChange={changeDataCompra}
           />
-          {showDataCompra && (
-            <DateTimePicker
-              testID="dataCompraPicker"
-              value={dataCompra}
-              mode={"date"}
-              is24Hour={true}
-              onChange={changeDataCompra}
-            />
-          )}
-        </TouchableOpacity>
+        )}
+
         <FormTextField
           label="Loja*"
           value={loja}
@@ -169,6 +168,14 @@ export default function FilmesCreateForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  buttonTextStyle: {
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+    color: "#1a1a1a",
+  },
+  buttonContainerStyle: {
+    justifyContent: "left",
+  },
   botaoAddFilme: {
     backgroundColor: 0,
   },

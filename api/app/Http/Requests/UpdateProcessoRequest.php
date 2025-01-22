@@ -28,6 +28,7 @@ class UpdateProcessoRequest extends FormRequest
             'validade' => ['required', 'date'],
             'loja' => ['required', 'string'],
             'valor' => ['required', 'string'],
+            'observacoes' => ['required', 'string'],
             'quantidade_usos' => ['required', 'integer'],
             'processo_etapas' => ['required', 'array'],
             'processo_etapas.*.nome' => ['required', 'string'],

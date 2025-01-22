@@ -15,6 +15,7 @@ import Logo from "../../components/Logo";
 import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Navbar from "../../components/Navbar";
 import Delete from "../../assets/buttonIcons/delete.svg";
+import Move from "../../assets/Move.svg";
 
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import {
@@ -25,7 +26,7 @@ import {
 } from "../../services/CrudService";
 import TextButton from "../../components/TextButton";
 import SplashScreen from "../SplashScreen";
-
+import TimeInput from "../../components/TimeInput";
 
 export default function RevelacoesCreateForm({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -107,7 +108,7 @@ export default function RevelacoesCreateForm({ navigation }) {
     } catch (error) {
       console.error("Erro ao buscar processos:", error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -158,7 +159,27 @@ export default function RevelacoesCreateForm({ navigation }) {
       processo: processoList[processo]["id"],
     });
   }
-  if(loading) return <SplashScreen/>
+
+  function stringToSec(string) {
+    const [minutes, seconds] = string.split(":");
+    const totalSeconds = +minutes * 60 + +seconds;
+    return totalSeconds;
+  }
+
+  const toHHMMSS = (secs) => {
+    const secNum = parseInt(secs.toString(), 10);
+    const hours = Math.floor(secNum / 3600);
+    const minutes = Math.floor(secNum / 60) % 60;
+    const seconds = secNum % 60;
+
+    return [hours, minutes, seconds]
+      .map((val) => (val < 10 ? `0${val}` : val))
+      .filter((val, index) => val !== "00" || index > 0)
+      .join(":")
+      .replace(/^0/, "");
+  };
+
+  if (loading) return <SplashScreen />;
 
   return (
     <View style={styles.container}>
@@ -241,27 +262,34 @@ export default function RevelacoesCreateForm({ navigation }) {
                 <View style={styles.stepContainer} key={index}>
                   <Text style={styles.stepTitle}>{etapa.nome}</Text>
                   <View style={styles.stepBody}>
-                    <TouchableOpacity onPress={() => handleStepDeletion(index)}>
-                      <Delete width={16} height={16} />
+                    <TouchableOpacity>
+                      <Move width={16} height={16} />
                     </TouchableOpacity>
 
-                    <FormTextField
-                      label="Tempo da etapa"
-                      defaultValue={String(etapa.duracao)}
+                    <TimeInput
+                      label="Duração da etapa"
+                      value={toHHMMSS(etapa.duracao || 0)}
                       onChangeText={(text) =>
                         setCustomEtapas(
                           changeDictionaryValueByKey(
                             customEtapas,
                             index,
                             "duracao",
-                            text == "" ? etapa.duracao : text
+                            stringToSec(text)
                           )
                         )
                       }
                     />
-                    <TouchableOpacity onPress={() => handleStepDeletion(index)}>
-                      <Delete width={16} height={16} />
-                    </TouchableOpacity>
+
+                    {etapa.posicao == 1 ? (
+                      <></>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => handleStepDeletion(index)}
+                      >
+                        <Delete />
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               ))}

@@ -44,6 +44,7 @@ export default function HomeScreen({ navigation }) {
       fetchProcessos();
       fetchRevelacoes();
     });
+    return unsubscribe; // Garante que o listener será limpo ao desmontar o componente
   }, [navigation]);
 
   async function fetchFilmes() {
@@ -83,7 +84,7 @@ export default function HomeScreen({ navigation }) {
       setLoading(false);
     }
   }
-  
+
   if (loading) return <SplashScreen />;
 
   return (
