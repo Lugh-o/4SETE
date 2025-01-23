@@ -234,16 +234,17 @@ export default function ProcessosEditForm({ navigation, route }) {
                   )
                 }
               />
-              <TimeInput
-                label="Duração da etapa"
-                value={toHHMMSS(etapa.duracao || 0)}
+              <FormTextField
+                label="Tempo da etapa*"
+                defaultValue={String(etapa.duracao)}
+                inputMode="numeric"
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(
                       etapaList,
                       index,
                       "duracao",
-                      stringToSec(text)
+                      text
                     )
                   )
                 }

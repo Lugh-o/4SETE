@@ -173,7 +173,7 @@ export default function RevelacoesEditForm({ navigation, route }) {
     navigation.navigate("CronometroScreen", {
       etapas: customEtapas,
       processo: processoList[processo]["id"],
-      revelacao: revelacao.id
+      revelacao: revelacao.id,
     });
   }
 
@@ -283,16 +283,17 @@ export default function RevelacoesEditForm({ navigation, route }) {
                       <Delete width={16} height={16} />
                     </TouchableOpacity>
 
-                    <TimeInput
-                      label="Duração da etapa"
-                      value={toHHMMSS(etapa.duracao || 0)}
+                    <FormTextField
+                      label="Tempo da etapa*"
+                      defaultValue={String(etapa.duracao)}
+                      inputMode="numeric"
                       onChangeText={(text) =>
-                        setCustomEtapas(
+                        setEtapaLista(
                           changeDictionaryValueByKey(
-                            customEtapas,
+                            etapaList,
                             index,
                             "duracao",
-                            stringToSec(text)
+                            text
                           )
                         )
                       }
@@ -326,15 +327,13 @@ export default function RevelacoesEditForm({ navigation, route }) {
               otherStyle={styles.otherStyle}
             />
           )}
-
-          <SimpleButton title="Começar a revelar" onPress={comecarRevelacao} />
-          <TextButton
-            title="Salvar para depois"
-            onPress={() => editRevelacao(true)}
-          />
         </ScrollView>
+        <SimpleButton title="Começar a revelar" onPress={comecarRevelacao} />
+        <TextButton
+          title="Salvar para depois"
+          onPress={() => editRevelacao(true)}
+        />
       </View>
-      <Navbar />
     </View>
   );
 }

@@ -15,7 +15,7 @@ import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
 import Delete from "../../assets/buttonIcons/delete.svg";
 
-import AddIcon from "../../assets/buttonIcons/add_2.svg"
+import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import AddIconGreen from "../../assets/add_green.svg";
 import { ProcessoService } from "../../services/CrudService";
 import TimeInput from "../../components/TimeInput";
@@ -245,15 +245,17 @@ export default function ProcessosCreateForm({ navigation }) {
                 }
               />
 
-              <TimeInput
-                label="Duração da etapa*"
+              <FormTextField
+                label="Tempo da etapa*"
+                // value={etapaList[index].duracao}
+                inputMode="numeric"
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(
                       etapaList,
                       index,
                       "duracao",
-                      stringToSec(text)
+                      text
                     )
                   )
                 }
@@ -266,7 +268,11 @@ export default function ProcessosCreateForm({ navigation }) {
           buttonStyle={styles.botaoAddEtapa}
           textStyle={styles.textoAddEtapa}
           rightIcon={
-            <AddIconGreen width={16} height={16} style={{ alignSelf: "center" }} />
+            <AddIconGreen
+              width={16}
+              height={16}
+              style={{ alignSelf: "center" }}
+            />
           }
           otherStyle={styles.otherStyle}
         />

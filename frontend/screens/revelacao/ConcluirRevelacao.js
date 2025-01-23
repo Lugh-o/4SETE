@@ -22,34 +22,23 @@ export default function ConcluirRevelacao({ navigation, route }) {
 
   // Function to open the image picker
   async function addImagem() {
-    // Request permission to access the media library
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      Alert.alert(
-        "Permissão Negada",
-        "É necessário permitir acesso à galeria para selecionar imagens."
-      );
-      return;
-    }
-
-    // Open the image picker
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false, // Allows cropping/editing
-      quality: 1, // Image quality
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: false,
+      base64: true,
+      quality: 1,
     });
 
     if (!result.canceled) {
-      const { uri } = result.assets[0]; // URI of the selected image
-      const filename = uri.split("/").pop(); // Extract filename from URI
-
-      // Fetch the image as a Blob
-      const response = await fetch(uri);
-      const binary = await response.blob();
-
-      // Add the image to the state
-      setImagens((prevImagens) => [...prevImagens, { uri, filename, binary }]);
+      setImagens((prevImagens) => [
+        ...prevImagens,
+        {
+          filename: result["assets"][0]["fileName"],
+          base64: result["assets"][0]["base64"],
+        },
+      ]);
+    } else {
+      alert("You did not select any image.");
     }
   }
 
@@ -60,9 +49,8 @@ export default function ConcluirRevelacao({ navigation, route }) {
     };
     try {
       const response = await RevelacaoService.finish(revelacao, payload);
-      // console.log(response.data);
 
-      // navigation.goBack();
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error.response?.data || error.message);
     }

@@ -190,12 +190,10 @@ class RevelacaoController extends Controller
             $revelacao->foi_concluida = true;
             $revelacao->observacoes = $payload['observacoes'];
             $revelacao->update(array($revelacao));
-            $result = 0;
-            foreach ($payload as $imagem) {
-                $result = $imagem;
-                
+
+            foreach ($payload['imagens'] as $imagem) {
                 $novaImagem = new RevelacaoImagem();
-                $novaImagem->imagem = $imagem['binary']['_data'];
+                $novaImagem->imagem = $imagem['base64'];
                 $novaImagem->nome = $imagem['filename'];
                 $novaImagem->revelacao_id = $idRevelacao;
                 $novaImagem->save();
@@ -208,8 +206,7 @@ class RevelacaoController extends Controller
             ], 404);
         } catch (\Throwable $th) {
             return response()->json([
-                // 'error' => $th->getMessage(),
-                'dd' => $result
+                'error' => $th->getMessage(),
             ], 500);
         }
     }

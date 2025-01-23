@@ -23,6 +23,8 @@ export default function FilmesEditForm({ navigation, route }) {
   const [showValidade, setShowValidade] = useState(false);
   const [dataCompra, setDataCompra] = useState(new Date(filme.data_compra));
   const [showDataCompra, setShowDataCompra] = useState(false);
+  const [validadeSelected, setValidadeSelected] = useState(false);
+  const [dataCompraSelected, setDataCompraSelected] = useState(false);
 
   const [loja, setLoja] = useState(filme.loja);
   const [valor, setValor] = useState(filme.valor);
@@ -52,10 +54,12 @@ export default function FilmesEditForm({ navigation, route }) {
   function changeValidade(event, selectedDate) {
     setValidade(selectedDate);
     setShowValidade(false);
+    setValidadeSelected(true);
   }
   function changeDataCompra(event, selectedDate) {
     setDataCompra(selectedDate);
     setShowDataCompra(false);
+    setDataCompraSelected(true);
   }
 
   return (
@@ -98,7 +102,11 @@ export default function FilmesEditForm({ navigation, route }) {
         />
 
         <SimpleButton
-          title={validade.toISOString().split("T")[0]}
+          title={
+            validadeSelected
+              ? validade.toISOString().split("T")[0]
+              : "Data de Validade"
+          }
           onPress={() => {
             setShowValidade(true);
           }}
@@ -116,7 +124,11 @@ export default function FilmesEditForm({ navigation, route }) {
         )}
 
         <SimpleButton
-          title={dataCompra.toISOString().split("T")[0]}
+          title={
+            dataCompraSelected
+              ? dataCompra.toISOString().split("T")[0]
+              : "Data de Compra"
+          }
           onPress={() => {
             setShowDataCompra(true);
           }}

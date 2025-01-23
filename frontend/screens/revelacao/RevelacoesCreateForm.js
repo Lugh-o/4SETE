@@ -141,7 +141,7 @@ export default function RevelacoesCreateForm({ navigation }) {
 
     try {
       const response = await RevelacaoService.create(revelacao);
-      const revelacaoId = response.data['id'];
+      const revelacaoId = response.data["id"];
 
       setRevelacao(revelacaoId);
 
@@ -279,16 +279,17 @@ export default function RevelacoesCreateForm({ navigation }) {
                       <Move width={16} height={16} />
                     </TouchableOpacity>
 
-                    <TimeInput
-                      label="Duração da etapa"
-                      value={toHHMMSS(etapa.duracao || 0)}
+                    <FormTextField
+                      label="Tempo da etapa*"
+                      // value={etapaList[index].duracao}
+                      inputMode="numeric"
                       onChangeText={(text) =>
-                        setCustomEtapas(
+                        setEtapaLista(
                           changeDictionaryValueByKey(
-                            customEtapas,
+                            etapaList,
                             index,
                             "duracao",
-                            stringToSec(text)
+                            text
                           )
                         )
                       }
@@ -323,13 +324,12 @@ export default function RevelacoesCreateForm({ navigation }) {
               otherStyle={styles.otherStyle}
             />
           )}
-
-          <SimpleButton title="Começar a revelar" onPress={comecarRevelacao} />
-          <TextButton
-            title="Salvar para depois"
-            onPress={() => postRevelacao(true)}
-          />
         </ScrollView>
+        <SimpleButton title="Começar a revelar" onPress={comecarRevelacao} />
+        <TextButton
+          title="Salvar para depois"
+          onPress={() => postRevelacao(true)}
+        />
       </View>
     </View>
   );

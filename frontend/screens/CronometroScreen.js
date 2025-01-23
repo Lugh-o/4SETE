@@ -1,5 +1,6 @@
 import { View, StyleSheet, Text } from "react-native";
 import React, { useContext, useState } from "react";
+import { Audio } from "expo-av";
 
 import AuthContext from "../context/AuthContext";
 
@@ -16,17 +17,33 @@ export default function CronometroScreen({ navigation, route }) {
   const [etapas, setEtapas] = useState(route.params.etapas);
   const [processo, setProcesso] = useState(route.params.processo);
   const [revelacao, setRevelacao] = useState(route.params.revelacao);
+  const [sound, setSound] = useState();
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     setEtapas(route.params.etapas);
     setProcesso(route.params.processo);
     setRevelacao(route.params.revelacao);
-    
-  },[navigation])
+  }, [navigation]);
 
-  // const etapas = route.params.etapas;
-  // const processo = route.params.processo;
-  // const revelacao = route.params.revelacao;  
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
+  async function playSound() {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require("../assets/bell.mp3") // Substitua pelo caminho do seu arquivo de som
+      );
+      setSound(sound);
+      await sound.playAsync();
+    } catch (error) {
+      console.log("Erro ao reproduzir som:", error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -50,6 +67,7 @@ export default function CronometroScreen({ navigation, route }) {
           nome={etapas[currentEtapa]["nome"]}
           duracao={etapas[currentEtapa]["duracao"]}
           onCountdownEnd={() => {
+            playSound();
             if (currentEtapa + 1 < etapas.length) {
               setCurrentEtapa(currentEtapa + 1);
             } else {
