@@ -19,6 +19,8 @@ import ProcessosEditForm from "./screens/processos/ProcessosEditForm";
 import RevelacoesScreen from "./screens/revelacao/RevelacoesScreen";
 import RevelacoesCreateForm from "./screens/revelacao/RevelacoesCreateForm";
 import RevelacoesEditForm from "./screens/revelacao/RevelacoesEditForm";
+import RevelacoesConcluir from "./screens/revelacao/ConcluirRevelacao";
+
 import CronometroScreen from "./screens/CronometroScreen";
 
 import AuthContext from "./context/AuthContext";
@@ -87,6 +89,11 @@ export default function App() {
                 name="RevelacoesEditForm"
                 component={RevelacoesEditForm}
               />
+              <Stack.Screen
+                name="RevelacoesConcluir"
+                component={RevelacoesConcluir}
+              />
+
               <Stack.Screen
                 name="CronometroScreen"
                 component={CronometroScreen}

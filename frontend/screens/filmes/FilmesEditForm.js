@@ -134,19 +134,19 @@ export default function FilmesEditForm({ navigation, route }) {
         )}
 
         <FormTextField
-          label="Loja*"
+          label="Loja"
           value={loja}
           onChangeText={(text) => setLoja(text)}
           errors={errors.loja}
         />
         <FormTextField
-          label="Valor*"
+          label="Valor"
           value={valor}
           onChangeText={(text) => setValor(text)}
           errors={errors.valor}
         />
         <FormTextField
-          label="Observações*"
+          label="Observações"
           value={observacoes}
           onChangeText={(text) => setObservacoes(text)}
           errors={errors.observacoes}

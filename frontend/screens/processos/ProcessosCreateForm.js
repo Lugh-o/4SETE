@@ -137,7 +137,7 @@ export default function ProcessosCreateForm({ navigation }) {
             errors={errors.nome}
           />
           <FormTextField
-            label="Marca*"
+            label="Marca"
             value={marca}
             onChangeText={(text) => setMarca(text)}
             errors={errors.marca}
@@ -147,7 +147,7 @@ export default function ProcessosCreateForm({ navigation }) {
             title={
               dataCompraSelected
                 ? dataCompra.toISOString().split("T")[0]
-                : "Data de Compra*"
+                : "Data de Compra"
             }
             onPress={() => {
               setShowDataCompra(true);
@@ -169,7 +169,7 @@ export default function ProcessosCreateForm({ navigation }) {
             title={
               validadeSelected
                 ? validade.toISOString().split("T")[0]
-                : "Data de Validade*"
+                : "Data de Validade"
             }
             onPress={() => {
               setShowValidade(true);
@@ -188,26 +188,26 @@ export default function ProcessosCreateForm({ navigation }) {
           )}
 
           <FormTextField
-            label="Loja*"
+            label="Loja"
             value={loja}
             onChangeText={(text) => setLoja(text)}
             errors={errors.loja}
           />
           <FormTextField
-            label="Valor*"
+            label="Valor"
             value={valor}
             onChangeText={(text) => setValor(text)}
             errors={errors.valor}
           />
           <FormTextField
-            label="Quantidade de usos estimada*"
+            label="Quantidade de usos estimada"
             value={quantidadeUsos}
             inputMode="numeric"
             onChangeText={(text) => setQuantidadeUsos(text)}
             errors={errors.observacoes}
           />
           <FormTextField
-            label="Observações*"
+            label="Observações"
             value={observacoes}
             onChangeText={(text) => setObservacoes(text)}
             errors={errors.observacoes}
@@ -246,7 +246,7 @@ export default function ProcessosCreateForm({ navigation }) {
               />
 
               <TimeInput
-                label="Duração da etapa"
+                label="Duração da etapa*"
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(

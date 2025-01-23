@@ -49,6 +49,7 @@ class ProcessoController extends Controller
             $processo->valor = $filteredData['processo']["valor"];
             $processo->quantidade_usos = $filteredData['processo']["quantidade_usos"];
             $processo->observacoes = $filteredData['processo']["observacoes"];
+            $processo->vezes_usado = 0;
             $processo->user_id = $idUser;
             $processo->save();
 
@@ -172,14 +173,17 @@ class ProcessoController extends Controller
         }
     }
 
-     /**
+    /**
      * Update the specified resource in storage.
      */
     public function incrementTimesUsed($id)
     {
         try {
             $processo = Processo::findOrFail($id);
-            $processo->quantidade_usos++;
+            $processo->vezes_usado++;
+            if ($processo->quantidade_usos > 0) {
+                $processo->quantidade_usos--;
+            }
             $processo->update(array($processo));
 
             return response()->json([], 200);

@@ -13,7 +13,9 @@ class Revelacao extends Model
         'filme_id',
         'camera_id',
         'processo_id',
-        'user_id'
+        'user_id',
+        'observacoes',
+        'foi_concluida',
     ];
 
     public function filme()

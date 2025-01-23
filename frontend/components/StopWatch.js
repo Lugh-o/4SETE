@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import SimpleButton from "./SimpleButton";
@@ -9,6 +9,7 @@ export default function StopWatch({ nome, duracao, onCountdownEnd }) {
   const [nomeEtapa, setNomeEtapa] = useState(nome);
 
   const [running, setRunning] = useState(false);
+  const [finished, setFinished] = useState(false);
   const intervalRef = useRef(null);
 
   const radius = 50;
@@ -16,12 +17,8 @@ export default function StopWatch({ nome, duracao, onCountdownEnd }) {
   const circumference = 2 * Math.PI * radius;
   const progress = (time / duracao) * circumference;
 
-  useEffect(() => {
-    setTime(duracao);
-    setNomeEtapa(nome);
-  }, [duracao]);
-
   const startCountdown = () => {
+    setFinished(false);
     if (time > 0) {
       intervalRef.current = setInterval(() => {
         setTime((prevTime) => {
@@ -29,6 +26,7 @@ export default function StopWatch({ nome, duracao, onCountdownEnd }) {
             clearInterval(intervalRef.current);
             setRunning(false);
             if (onCountdownEnd) {
+              setFinished(true);
               setTimeout(() => onCountdownEnd(), 0);
             }
             return 0;
@@ -49,11 +47,14 @@ export default function StopWatch({ nome, duracao, onCountdownEnd }) {
     clearInterval(intervalRef.current);
     setTime(duracao);
     setRunning(false);
+    setNomeEtapa(nome);
+    setFinished(false);
   };
 
-  const pularEtapa = () => {
-    pauseCountdown();
-    setTimeout(() => onCountdownEnd(), 0);
+  const skipStep = () => {
+    setFinished(true);
+    setTime(0);
+    onCountdownEnd();
   };
 
   const formatTime = (seconds) => {
@@ -93,17 +94,38 @@ export default function StopWatch({ nome, duracao, onCountdownEnd }) {
       </Svg>
       <Text style={styles.timeText}>{formatTime(time)}</Text>
       <View style={styles.buttonContainer}>
-        {running ? (
+        {!running && !finished && (
           <>
-            <SimpleButton title="Pausar" onPress={pauseCountdown} />
-            <TextButton title="Pular Etapa" onPress={pularEtapa} />
-          </>
-        ) : (
-          <>
-            <SimpleButton title="Iniciar" onPress={startCountdown} />
-            <TextButton title="Pular Etapa" onPress={pularEtapa} />
+            <SimpleButton title={"Iniciar"} onPress={startCountdown} />
+            <TextButton title={"Pular Etapa"} onPress={skipStep} />
           </>
         )}
+
+        {running && !finished && (
+          <>
+            <SimpleButton title={"Pausar"} onPress={pauseCountdown} />
+            <TextButton title={"Pular Etapa"} onPress={skipStep} />
+          </>
+        )}
+
+        {finished && (
+          <SimpleButton title={"Proxima Etapa"} onPress={resetCountdown} />
+        )}
+
+        {/* {running ? (
+          <>
+            <SimpleButton title={"Pausar"} onPress={pauseCountdown} />
+            <TextButton title={"Pular Etapa"} onPress={startCountdown} />
+          </>
+        ) : (
+          {finished ? (            
+            <SimpleButton title={"Pausar"} onPress={pauseCountdown} />
+          ) : (<>
+            <SimpleButton title={"Iniciar"} onPress={startCountdown} />
+            <TextButton title={"Pular Etapa"} onPress={startCountdown} />
+          </>)}
+          
+        )} */}
       </View>
     </View>
   );
@@ -120,6 +142,8 @@ const styles = StyleSheet.create({
     marginTop: 44,
   },
   container: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
   },
   timeText: {
@@ -135,5 +159,25 @@ const styles = StyleSheet.create({
     marginTop: 44,
     width: 300,
     gap: 20,
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  startButton: {
+    backgroundColor: "#2ecc71",
+    marginRight: 10,
+  },
+  resetButton: {
+    backgroundColor: "#e74c3c",
+    marginRight: 10,
+  },
+  pauseButton: {
+    backgroundColor: "#f39c12",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
   },
 });

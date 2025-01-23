@@ -9,6 +9,7 @@ use App\Models\Filme;
 use App\Models\Processo;
 use App\Models\RevelacaoEtapa;
 use App\Models\Revelacao;
+use App\Models\RevelacaoImagem;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -60,11 +61,14 @@ class RevelacaoController extends Controller
             $revelacao->camera_id = $filteredData['revelacao']["camera_id"];
             $revelacao->processo_id = $filteredData['revelacao']["processo_id"];
             $revelacao->user_id = $userId;
+            $revelacao->foi_concluida = false;
             $revelacao->save();
 
             $this->syncSteps($revelacao, $filteredData['revelacao_etapas']);
 
-            return response()->json([], 201);
+            return response()->json([
+                'data' => $revelacao
+            ], 201);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => $th->getMessage()
@@ -175,6 +179,38 @@ class RevelacaoController extends Controller
                 $novaEtapa->revelacao_id = $revelacao['id'];
                 $novaEtapa->save();
             }
+        }
+    }
+
+    public function concluirRevelacao($idRevelacao, Request $request)
+    {
+        try {
+            $payload = $request->only(['imagens', 'observacoes']);
+            $revelacao = Revelacao::findOrFail($idRevelacao);
+            $revelacao->foi_concluida = true;
+            $revelacao->observacoes = $payload['observacoes'];
+            $revelacao->update(array($revelacao));
+            $result = 0;
+            foreach ($payload as $imagem) {
+                $result = $imagem;
+                
+                $novaImagem = new RevelacaoImagem();
+                $novaImagem->imagem = $imagem['binary']['_data'];
+                $novaImagem->nome = $imagem['filename'];
+                $novaImagem->revelacao_id = $idRevelacao;
+                $novaImagem->save();
+            }
+
+            return response()->json([], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Revelação não encontrada'
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                // 'error' => $th->getMessage(),
+                'dd' => $result
+            ], 500);
         }
     }
 }

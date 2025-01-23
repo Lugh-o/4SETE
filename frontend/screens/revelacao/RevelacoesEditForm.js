@@ -15,6 +15,7 @@ import Logo from "../../components/Logo";
 import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Navbar from "../../components/Navbar";
 import Delete from "../../assets/buttonIcons/delete.svg";
+import AddIconGreen from "../../assets/add_green.svg";
 
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import {
@@ -172,6 +173,7 @@ export default function RevelacoesEditForm({ navigation, route }) {
     navigation.navigate("CronometroScreen", {
       etapas: customEtapas,
       processo: processoList[processo]["id"],
+      revelacao: revelacao.id
     });
   }
 
@@ -212,7 +214,7 @@ export default function RevelacoesEditForm({ navigation, route }) {
             buttonStyle={styles.botaoHome}
             textStyle={styles.textoHome}
           />
-          <Text style={styles.title}>Adicionando revelação</Text>
+          <Text style={styles.title}>Editar revelação</Text>
         </View>
 
         <ScrollView style={styles.scroll}>
@@ -314,7 +316,14 @@ export default function RevelacoesEditForm({ navigation, route }) {
               onPress={addEtapa}
               buttonStyle={styles.botaoAddEtapa}
               textStyle={styles.textoAddEtapa}
-              rightIcon={<AddIcon width={16} height={16} />}
+              rightIcon={
+                <AddIconGreen
+                  width={16}
+                  height={16}
+                  style={{ alignSelf: "center" }}
+                />
+              }
+              otherStyle={styles.otherStyle}
             />
           )}
 
@@ -331,6 +340,9 @@ export default function RevelacoesEditForm({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  otherStyle: {
+    gap: 12,
+  },
   botaoAddEtapa: {
     backgroundColor: 0,
     margin: 0,

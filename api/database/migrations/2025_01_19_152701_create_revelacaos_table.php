@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('filme_id')->references('id')->on('filmes')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('camera_id')->references('id')->on('cameras')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('processo_id')->references('id')->on('processos')->onDelete('cascade')->onUpdate('cascade');
+            $table->boolean('foi_concluida');
+            $table->text('observacoes')->nullable();
             $table->timestamps();
         });
     }

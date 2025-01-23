@@ -28,7 +28,6 @@ class FilmeController extends Controller
         }
     }
 
-
     /**
      * Store a newly created resource in storage.
      */
@@ -85,7 +84,6 @@ class FilmeController extends Controller
     public function update(UpdateFilmeRequest $request, $id)
     {
         try {
-
             $data = $request->all();
             $data['user_id'] = auth('sanctum')->user()["id"];
 

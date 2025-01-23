@@ -36,6 +36,7 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::get('/revelacoes/{id}', [RevelacaoController::class, 'show']);
     Route::delete('/revelacoes/{id}', [RevelacaoController::class, 'destroy']);
     Route::put('/revelacoes/{id}', [RevelacaoController::class, 'update']);
+    Route::put('/revelacoes/{id}/finish', [RevelacaoController::class, 'concluirRevelacao']);
 
     Route::get('/etapasProcesso/{id}', [ProcessoEtapaController::class, 'index']);
 

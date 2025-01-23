@@ -13,9 +13,20 @@ import { ProcessoService } from "../services/CrudService";
 export default function CronometroScreen({ navigation, route }) {
   const { user, setUser } = useContext(AuthContext);
   const [currentEtapa, setCurrentEtapa] = useState(0);
+  const [etapas, setEtapas] = useState(route.params.etapas);
+  const [processo, setProcesso] = useState(route.params.processo);
+  const [revelacao, setRevelacao] = useState(route.params.revelacao);
 
-  const etapas = route.params.etapas;
-  const processo = route.params.processo;
+  React.useEffect(()=>{
+    setEtapas(route.params.etapas);
+    setProcesso(route.params.processo);
+    setRevelacao(route.params.revelacao);
+    
+  },[navigation])
+
+  // const etapas = route.params.etapas;
+  // const processo = route.params.processo;
+  // const revelacao = route.params.revelacao;  
 
   return (
     <View style={styles.container}>
@@ -43,7 +54,9 @@ export default function CronometroScreen({ navigation, route }) {
               setCurrentEtapa(currentEtapa + 1);
             } else {
               ProcessoService.increment(processo);
-              navigation.navigate("Home");
+              navigation.navigate("RevelacoesConcluir", {
+                revelacao: revelacao,
+              });
             }
           }}
         />

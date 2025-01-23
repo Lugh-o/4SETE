@@ -104,7 +104,7 @@ export default function FilmesCreateForm({ navigation }) {
           title={
             validadeSelected
               ? validade.toISOString().split("T")[0]
-              : "Data de Validade*"
+              : "Data de Validade"
           }
           onPress={() => {
             setShowValidade(true);
@@ -126,7 +126,7 @@ export default function FilmesCreateForm({ navigation }) {
           title={
             dataCompraSelected
               ? dataCompra.toISOString().split("T")[0]
-              : "Data de Compra*"
+              : "Data de Compra"
           }
           onPress={() => {
             setShowDataCompra(true);
@@ -145,19 +145,19 @@ export default function FilmesCreateForm({ navigation }) {
         )}
 
         <FormTextField
-          label="Loja*"
+          label="Loja"
           value={loja}
           onChangeText={(text) => setLoja(text)}
           errors={errors.loja}
         />
         <FormTextField
-          label="Valor*"
+          label="Valor"
           value={valor}
           onChangeText={(text) => setValor(text)}
           errors={errors.valor}
         />
         <FormTextField
-          label="Observações*"
+          label="Observações"
           value={observacoes}
           onChangeText={(text) => setObservacoes(text)}
           errors={errors.observacoes}

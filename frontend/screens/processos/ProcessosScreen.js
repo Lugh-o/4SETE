@@ -77,7 +77,7 @@ export default function ProcessosScreen({ navigation }) {
                 key={processo.id}
                 bigText={processo.nome}
                 mediumText={
-                  processo.quantidade_usos +
+                  processo.vezes_usado +
                   " Revelações, Validade: " +
                   processo.validade.substring(0, 10)
                 }

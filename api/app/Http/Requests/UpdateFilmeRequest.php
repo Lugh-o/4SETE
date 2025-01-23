@@ -23,13 +23,13 @@ class UpdateFilmeRequest extends FormRequest
     {
         return [
             'marca' => ['required', 'string'],
-            'validade' => ['required', 'date'],
+            'validade' => ['nullable', 'date'],
             'modelo' => ['required', 'string'],
             'iso' => ['required', 'integer'],
-            'data_compra' => ['required', 'date'],
-            'loja' => ['required', 'string'],
-            'valor' => ['required', 'string'],
-            'observacoes' => ['required', 'string'],
+            'data_compra' => ['nullable', 'date'],
+            'loja' => ['nullable', 'string'],
+            'valor' => ['nullable', 'string'],
+            'observacoes' => ['nullable', 'string'],
         ];
     }
 }

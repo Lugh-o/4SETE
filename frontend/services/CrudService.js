@@ -44,6 +44,7 @@ export const RevelacaoService = {
   create: (payload) => createResource("/revelacoes", payload),
   update: (id, payload) => updateResource(`/revelacoes/${id}`, payload),
   delete: (id) => deleteResource(`/revelacoes/${id}`),
+  finish: (id, payload) => updateResource(`/revelacoes/${id}/finish`, payload),
 };
 
 export const EtapaService = {

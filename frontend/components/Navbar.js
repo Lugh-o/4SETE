@@ -3,30 +3,21 @@ import NavbarButton from "./NavbarButton";
 import SettingsIcon from "../assets/buttonIcons/settings.svg";
 import CottageIcon from "../assets/buttonIcons/cottage.svg";
 import LocalLibraryIcon from "../assets/buttonIcons/local_library.svg";
+import HideWithKeyboard from "react-native-hide-with-keyboard";
 
 export default function Navbar() {
   return (
-    <View style={styles.navegao}>
+    <HideWithKeyboard style={styles.navegao}>
       <View style={[styles.navbar, styles.navegao1ShadowBox]}>
         <NavbarButton icon={<SettingsIcon width={24} height={24} />} />
         <NavbarButton icon={<CottageIcon width={24} height={24} />} />
         <NavbarButton icon={<LocalLibraryIcon width={24} height={24} />} />
       </View>
-    </View>
+    </HideWithKeyboard>
   );
 }
 
 const styles = StyleSheet.create({
-  dropdownButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    width: 36,
-    height: 36,
-    backgroundColor: "#dadada",
-  },
   navbar: {
     flexDirection: "row",
     backgroundColor: "#dadada",

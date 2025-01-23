@@ -16,6 +16,7 @@ import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Navbar from "../../components/Navbar";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import Move from "../../assets/Move.svg";
+import AddIconGreen from "../../assets/add_green.svg";
 
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import {
@@ -43,6 +44,7 @@ export default function RevelacoesCreateForm({ navigation }) {
   const [camera, setCamera] = useState("");
   const [processo, setProcesso] = useState("");
   const [customEtapas, setCustomEtapas] = useState([]);
+  const [revelacao, setRevelacao] = useState("");
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
@@ -139,10 +141,15 @@ export default function RevelacoesCreateForm({ navigation }) {
 
     try {
       const response = await RevelacaoService.create(revelacao);
+      const revelacaoId = response.data['id'];
+
+      setRevelacao(revelacaoId);
 
       if (goBack) navigation.goBack();
+      return revelacaoId;
     } catch (error) {
       console.error(error.response?.data || error.message);
+      throw error;
     }
   }
 
@@ -152,12 +159,18 @@ export default function RevelacoesCreateForm({ navigation }) {
     return newArray;
   }
 
-  function comecarRevelacao() {
-    postRevelacao(false);
-    navigation.navigate("CronometroScreen", {
-      etapas: customEtapas,
-      processo: processoList[processo]["id"],
-    });
+  async function comecarRevelacao() {
+    try {
+      const waiter = await postRevelacao(false);
+
+      navigation.navigate("CronometroScreen", {
+        etapas: customEtapas,
+        processo: processoList[processo]["id"],
+        revelacao: waiter,
+      });
+    } catch (error) {
+      console.error("Erro ao iniciar a revelação:", error.message);
+    }
   }
 
   function stringToSec(string) {
@@ -300,7 +313,14 @@ export default function RevelacoesCreateForm({ navigation }) {
               onPress={addEtapa}
               buttonStyle={styles.botaoAddEtapa}
               textStyle={styles.textoAddEtapa}
-              rightIcon={<AddIcon width={16} height={16} />}
+              rightIcon={
+                <AddIconGreen
+                  width={16}
+                  height={16}
+                  style={{ alignSelf: "center" }}
+                />
+              }
+              otherStyle={styles.otherStyle}
             />
           )}
 
@@ -311,12 +331,14 @@ export default function RevelacoesCreateForm({ navigation }) {
           />
         </ScrollView>
       </View>
-      <Navbar />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  otherStyle: {
+    gap: 12,
+  },
   botaoAddEtapa: {
     backgroundColor: 0,
     margin: 0,

@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('filmes', function (Blueprint $table) {
             $table->id();
             $table->text('marca');
-            $table->dateTime('validade');
+            $table->dateTime('validade')->nullable();
             $table->text('modelo');
             $table->integer('iso');
-            $table->dateTime('data_compra');
-            $table->text('loja');
-            $table->text('valor');
-            $table->text('observacoes');
+            $table->dateTime('data_compra')->nullable();
+            $table->text('loja')->nullable();
+            $table->text('valor')->nullable();
+            $table->text('observacoes')->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

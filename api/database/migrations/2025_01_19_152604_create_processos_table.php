@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('processos', function (Blueprint $table) {
             $table->id();
             $table->text('nome');
-            $table->text('marca');
-            $table->dateTime('data_compra');
-            $table->dateTime('validade');
-            $table->text('loja');
-            $table->text('valor');
-            $table->text('observacoes');
-            $table->integer('quantidade_usos');
+            $table->text('marca')->nullable();
+            $table->dateTime('data_compra')->nullable();
+            $table->dateTime('validade')->nullable();
+            $table->text('loja')->nullable();
+            $table->text('valor')->nullable();
+            $table->text('observacoes')->nullable();
+            $table->integer('quantidade_usos')->nullable();
+            $table->integer('vezes_usado');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
