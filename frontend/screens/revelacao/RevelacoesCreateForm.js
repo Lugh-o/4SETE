@@ -281,12 +281,12 @@ export default function RevelacoesCreateForm({ navigation }) {
 
                     <FormTextField
                       label="Tempo da etapa*"
-                      // value={etapaList[index].duracao}
+                      defaultValue={String(etapa.duracao)}
                       inputMode="numeric"
                       onChangeText={(text) =>
-                        setEtapaLista(
+                        setCustomEtapas(
                           changeDictionaryValueByKey(
-                            etapaList,
+                            customEtapas,
                             index,
                             "duracao",
                             text

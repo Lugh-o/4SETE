@@ -194,7 +194,8 @@ export default function ProcessosEditForm({ navigation, route }) {
           />
           <FormTextField
             label="Quantidade de usos estimada*"
-            defaultValue={String(quantidadeUsos)}
+            inputMode="numeric"
+            defaultValue={quantidadeUsos == null ? "" : String(quantidadeUsos)}
             onChangeText={(text) => setQuantidadeUsos(text)}
           />
           <FormTextField

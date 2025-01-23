@@ -288,9 +288,9 @@ export default function RevelacoesEditForm({ navigation, route }) {
                       defaultValue={String(etapa.duracao)}
                       inputMode="numeric"
                       onChangeText={(text) =>
-                        setEtapaLista(
+                        setCustomEtapas(
                           changeDictionaryValueByKey(
-                            etapaList,
+                            customEtapas,
                             index,
                             "duracao",
                             text
