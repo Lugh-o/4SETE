@@ -2,7 +2,6 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useContext, useState } from "react";
 
 import AuthContext from "../context/AuthContext";
-import { logout } from "../services/AuthService";
 import Logo from "../components/Logo";
 
 import Card from "../components/Card";
@@ -20,10 +19,10 @@ import {
   RevelacaoService,
   ProcessoService,
 } from "../services/CrudService";
+
 import SplashScreen from "./SplashScreen";
 
 export default function HomeScreen({ navigation }) {
-  const { user, setUser } = useContext(AuthContext);
 
   const [filme, setFilme] = useState("");
   const [camera, setCamera] = useState("");
@@ -31,10 +30,7 @@ export default function HomeScreen({ navigation }) {
   const [revelacao, setRevelacao] = useState("");
   const [loading, setLoading] = useState(true);
 
-  async function handleLogout() {
-    await logout();
-    setUser(null);
-  }
+
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {

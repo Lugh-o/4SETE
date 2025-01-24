@@ -15,7 +15,13 @@ use Illuminate\Validation\Rules;
 
 Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        try {
+            return $request->user();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => $th->getMessage()
+            ], 500);
+        }
     });
 
     Route::get('/filmes', [FilmeController::class, 'index']);

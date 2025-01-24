@@ -1,11 +1,8 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-export default function NavbarButton({ icon }) {
+export default function NavbarButton({ icon, onPress }) {
   return (
-    <TouchableOpacity
-      style={styles.button}
-      onPress={() => console.log("teste")}
-    >
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       {icon}
     </TouchableOpacity>
   );

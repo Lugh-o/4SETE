@@ -4,14 +4,27 @@ import SettingsIcon from "../assets/buttonIcons/settings.svg";
 import CottageIcon from "../assets/buttonIcons/cottage.svg";
 import LocalLibraryIcon from "../assets/buttonIcons/local_library.svg";
 import HideWithKeyboard from "react-native-hide-with-keyboard";
+import { logout } from "../services/AuthService";
+import { useContext } from "react";
+import AuthContext from "../context/AuthContext";
 
 export default function Navbar() {
+  const { user, setUser } = useContext(AuthContext);
+
+  async function handleLogout() {
+    await logout();
+    setUser(null);
+  }
+
   return (
     <HideWithKeyboard style={styles.navegao}>
       <View style={[styles.navbar, styles.navegao1ShadowBox]}>
         <NavbarButton icon={<SettingsIcon width={24} height={24} />} />
         <NavbarButton icon={<CottageIcon width={24} height={24} />} />
-        <NavbarButton icon={<LocalLibraryIcon width={24} height={24} />} />
+        <NavbarButton
+          icon={<LocalLibraryIcon width={24} height={24} />}
+          onPress={handleLogout}
+        />
       </View>
     </HideWithKeyboard>
   );
