@@ -46,12 +46,17 @@ export default function App() {
   }, []);
 
   if (status === "loading") {
-    return <SplashScreen />;
+    return (
+      <>
+        <StatusBar translucent={true} backgroundColor={"#0000"} />
+        <SplashScreen />
+      </>
+    );
   }
 
   return (
     <>
-      <StatusBar translucent={true} backgroundColor={'#0000'}/>
+      <StatusBar translucent={true} backgroundColor={"#0000"} />
       <AuthContext.Provider value={{ user, setUser }}>
         <NavigationContainer>
           <Stack.Navigator
