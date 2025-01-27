@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ConcludeRevelacaoRequest;
 use App\Http\Requests\StoreRevelacaoRequest;
 use App\Http\Requests\UpdateRevelacaoRequest;
 use App\Models\Camera;
@@ -182,7 +183,7 @@ class RevelacaoController extends Controller
         }
     }
 
-    public function concluirRevelacao($idRevelacao, Request $request)
+    public function concluirRevelacao($idRevelacao, ConcludeRevelacaoRequest $request)
     {
         try {
             $payload = $request->only(['imagens', 'observacoes']);

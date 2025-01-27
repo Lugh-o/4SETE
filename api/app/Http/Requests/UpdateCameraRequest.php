@@ -22,8 +22,8 @@ class UpdateCameraRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'marca' => ['required', 'string'],
-            'modelo' => ['required', 'string'],
+            'marca' => ['required', 'string', 'min:1', 'max:255'],
+            'modelo' => ['required', 'string', 'min:1', 'max:255'],
         ];
     }
 }

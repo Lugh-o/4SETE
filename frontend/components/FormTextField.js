@@ -1,11 +1,22 @@
 import { View, TextInput, StyleSheet, Text } from "react-native";
 
-export default function FormTextField({ label, errors = [], ...rest }) {
+export default function FormTextField({
+  label,
+  errors = [],
+  showTopLabel = null,
+  ...rest
+}) {
   return (
-    <View >
+    <View>
+      {!(showTopLabel === null || showTopLabel == "") && (
+        <Text style={[styles.inputLabel]}>{label}</Text>
+      )}
       <TextInput
         style={[styles.input]}
         autoCapitalize="none"
+        autoCorrect={false}
+        maxLength={255}
+        autoComplete="off"
         placeholder={label}
         {...rest}
       />
@@ -21,6 +32,16 @@ export default function FormTextField({ label, errors = [], ...rest }) {
 }
 
 const styles = StyleSheet.create({
+  inputLabel: {
+    position: "absolute",
+    zIndex: 100,
+    left: 12,
+    top: -5,
+    backgroundColor: "#FFF",
+    fontSize: 10,
+    fontFamily: "Inter-Regular",
+    color: "#666",
+  },
   error: {
     color: "#E90000",
     marginTop: 2,

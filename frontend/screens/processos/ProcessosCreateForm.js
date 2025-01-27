@@ -133,12 +133,14 @@ export default function ProcessosCreateForm({ navigation }) {
           <FormTextField
             label="Nome*"
             value={nome}
+            showTopLabel={nome}
             onChangeText={(text) => setNome(text)}
             errors={errors.nome}
           />
           <FormTextField
             label="Marca"
             value={marca}
+            showTopLabel={marca}
             onChangeText={(text) => setMarca(text)}
             errors={errors.marca}
           />
@@ -190,25 +192,30 @@ export default function ProcessosCreateForm({ navigation }) {
           <FormTextField
             label="Loja"
             value={loja}
+            showTopLabel={loja}
             onChangeText={(text) => setLoja(text)}
             errors={errors.loja}
           />
           <FormTextField
             label="Valor"
             value={valor}
+            showTopLabel={valor}
+            inputMode="decimal"
             onChangeText={(text) => setValor(text)}
             errors={errors.valor}
           />
           <FormTextField
             label="Quantidade de usos estimada"
             value={quantidadeUsos}
-            inputMode="numeric"
+            showTopLabel={quantidadeUsos}
+            inputMode="decimal"
             onChangeText={(text) => setQuantidadeUsos(text)}
             errors={errors.observacoes}
           />
           <FormTextField
             label="Observações"
             value={observacoes}
+            showTopLabel={observacoes}
             onChangeText={(text) => setObservacoes(text)}
             errors={errors.observacoes}
           />
@@ -237,7 +244,6 @@ export default function ProcessosCreateForm({ navigation }) {
               </View>
               <FormTextField
                 label="Nome da etapa*"
-                // value={etapa.nome}
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(etapaList, index, "nome", text)
@@ -247,8 +253,7 @@ export default function ProcessosCreateForm({ navigation }) {
 
               <FormTextField
                 label="Tempo da etapa*"
-                // value={etapaList[index].duracao}
-                inputMode="numeric"
+                inputMode="decimal"
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(

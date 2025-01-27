@@ -26,9 +26,9 @@ class UpdateRevelacaoRequest extends FormRequest
             'camera_id' => ['required', 'integer'],
             'processo_id' => ['required', 'integer'],
             'revelacao_etapas' => ['required', 'array'],
-            'revelacao_etapas.*.nome' => ['required', 'string'],
-            'revelacao_etapas.*.duracao' => ['required', 'integer'],
-            'revelacao_etapas.*.posicao' => ['required', 'integer'],
+            'revelacao_etapas.*.nome' => ['required', 'string', 'min:1', 'max:255'],
+            'revelacao_etapas.*.duracao' => ['required', 'integer', 'gt:0'],
+            'revelacao_etapas.*.posicao' => ['required', 'integer', 'gt:0'],
         ];
     }
 }

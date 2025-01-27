@@ -79,10 +79,21 @@ Route::post("/login", function (Request $request) {
 
 Route::post("/register", function (Request $request) {
     $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        'device_name' => ['required']
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email|max:255',
+        'password' => [
+            'required',
+            'string',
+            'confirmed',
+            'min:8',
+            function ($attribute, $value, $fail) {
+                if (!preg_match('/[a-z]/', $value)) $fail('The password must contain at least one lowercase letter.');
+                if (!preg_match('/[A-Z]/', $value)) $fail('The password must contain at least one uppercase letter.');
+                if (!preg_match('/[0-9]/', $value)) $fail('The password must contain at least one digit.');
+                if (!preg_match('/[@$!%*#?&]/', $value)) $fail('The password must contain at least one special character (@, $, !, %, *, #, ?, &).');
+            },
+            'device_name' => ['required']
+        ]
     ]);
 
     $user = User::create([

@@ -22,18 +22,18 @@ class UpdateProcessoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string'],
-            'marca' => ['nullable', 'string'],
+            'nome' => ['required', 'string', 'min:1', 'max:255'],
+            'marca' => ['nullable', 'string', 'min:1', 'max:255'],
             'data_compra' => ['nullable', 'date'],
             'validade' => ['nullable', 'date'],
-            'loja' => ['nullable', 'string'],
-            'valor' => ['nullable', 'string'],
-            'observacoes' => ['nullable', 'string'],
-            'quantidade_usos' => ['nullable', 'integer'],
+            'loja' => ['nullable', 'string', 'min:1', 'max:255'],
+            'valor' => ['nullable', 'decimal:0,2', 'min:0.01', 'max:99999.99'],
+            'observacoes' => ['nullable', 'string', 'min:1', 'max:255'],
+            'quantidade_usos' => ['nullable', 'integer', 'min:0', 'max:99999'],
             'processo_etapas' => ['required', 'array'],
-            'processo_etapas.*.nome' => ['required', 'string'],
-            'processo_etapas.*.duracao' => ['required', 'integer'],
-            'processo_etapas.*.posicao' => ['required', 'integer'],
+            'processo_etapas.*.nome' => ['required', 'string', 'min:1', 'max:255'],
+            'processo_etapas.*.duracao' => ['required', 'integer', 'gt:0'],
+            'processo_etapas.*.posicao' => ['required', 'integer', 'gt:0'],
         ];
     }
 }

@@ -134,12 +134,14 @@ export default function ProcessosEditForm({ navigation, route }) {
           <FormTextField
             label="Nome*"
             defaultValue={nome}
+            showTopLabel={nome}
             onChangeText={(text) => setNome(text)}
             errors={errors.nome}
           />
           <FormTextField
             label="Marca*"
             defaultValue={marca}
+            showTopLabel={marca}
             onChangeText={(text) => setMarca(text)}
             errors={errors.marca}
           />
@@ -183,24 +185,29 @@ export default function ProcessosEditForm({ navigation, route }) {
           <FormTextField
             label="Loja*"
             defaultValue={loja}
+            showTopLabel={loja}
             onChangeText={(text) => setLoja(text)}
             errors={errors.loja}
           />
           <FormTextField
             label="Valor*"
             defaultValue={valor}
+            inputMode="decimal"
+            showTopLabel={valor}
             onChangeText={(text) => setValor(text)}
             errors={errors.valor}
           />
           <FormTextField
             label="Quantidade de usos estimada*"
-            inputMode="numeric"
+            inputMode="decimal"
+            showTopLabel={quantidadeUsos}
             defaultValue={quantidadeUsos == null ? "" : String(quantidadeUsos)}
             onChangeText={(text) => setQuantidadeUsos(text)}
           />
           <FormTextField
             label="Observações*"
             defaultValue={observacoes}
+            showTopLabel={observacoes}
             onChangeText={(text) => setObservacoes(text)}
             errors={errors.observacoes}
           />
@@ -238,7 +245,7 @@ export default function ProcessosEditForm({ navigation, route }) {
               <FormTextField
                 label="Tempo da etapa*"
                 defaultValue={String(etapa.duracao)}
-                inputMode="numeric"
+                inputMode="decimal"
                 onChangeText={(text) =>
                   setEtapaLista(
                     changeDictionaryValueByKey(

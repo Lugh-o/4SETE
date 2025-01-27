@@ -22,14 +22,14 @@ class StoreFilmeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'marca' => ['required', 'string'],
+            'marca' => ['required', 'string', 'min:1', 'max:255'],
             'validade' => ['nullable', 'date'],
-            'modelo' => ['required', 'string'],
-            'iso' => ['required', 'integer'],
+            'modelo' => ['required', 'string', 'min:1', 'max:255'],
+            'iso' => ['required', 'integer', 'min:0', 'max:99999.99'],
             'data_compra' => ['nullable', 'date'],
-            'loja' => ['nullable', 'string'],
-            'valor' => ['nullable', 'string'],
-            'observacoes' => ['nullable', 'string'],
+            'loja' => ['nullable', 'string', 'min:1', 'max:255'],
+            'valor' => ['nullable', 'decimal:0,2', 'min:0', 'max:99999.99'],
+            'observacoes' => ['nullable', 'string', 'min:1', 'max:255'],
         ];
     }
 }

@@ -31,6 +31,17 @@ export default function FilmesEditForm({ navigation, route }) {
   const [observacoes, setObservacoes] = useState(filme.observacoes);
   const [errors, setErrors] = useState({});
 
+  // console.log({
+  //   marca: marca,
+  //   validade: validade,
+  //   modelo: modelo,
+  //   iso: iso,
+  //   data_compra: dataCompra,
+  //   loja: loja,
+  //   valor: valor,
+  //   observacoes: observacoes,
+  // });
+
   async function handleEdit() {
     try {
       const payload = {
@@ -84,19 +95,22 @@ export default function FilmesEditForm({ navigation, route }) {
         <FormTextField
           label="Marca*"
           value={marca}
+          showTopLabel={marca}
           onChangeText={(text) => setMarca(text)}
           errors={errors.marca}
         />
         <FormTextField
           label="Modelo*"
           value={modelo}
+          showTopLabel={modelo}
           onChangeText={(text) => setModelo(text)}
           errors={errors.modelo}
         />
         <FormTextField
           label="ISO*"
           value={String(iso)}
-          inputMode="numeric"
+          inputMode="decimal"
+          showTopLabel={iso}
           onChangeText={(text) => setIso(text)}
           errors={errors.iso}
         />
@@ -148,18 +162,22 @@ export default function FilmesEditForm({ navigation, route }) {
         <FormTextField
           label="Loja"
           value={loja}
+          showTopLabel={loja}
           onChangeText={(text) => setLoja(text)}
           errors={errors.loja}
         />
         <FormTextField
           label="Valor"
           value={valor}
+          showTopLabel={valor}
+          inputMode="decimal"
           onChangeText={(text) => setValor(text)}
           errors={errors.valor}
         />
         <FormTextField
           label="Observações"
           value={observacoes}
+          showTopLabel={observacoes}
           onChangeText={(text) => setObservacoes(text)}
           errors={errors.observacoes}
         />

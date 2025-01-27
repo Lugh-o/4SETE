@@ -23,14 +23,11 @@ import {
 import SplashScreen from "./SplashScreen";
 
 export default function HomeScreen({ navigation }) {
-
   const [filme, setFilme] = useState("");
   const [camera, setCamera] = useState("");
   const [processo, setProcesso] = useState("");
   const [revelacao, setRevelacao] = useState("");
   const [loading, setLoading] = useState(true);
-
-
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -99,7 +96,7 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         }
         bigText={"Meus Filmes"}
-        mediumText={filme + " filmes"}
+        mediumText={filme == 1 ? filme + " filme" : filme + " filmes"}
         borderColor={"greenBorder"}
         onPress={() => {
           navigation.navigate("FilmesList");
@@ -109,7 +106,7 @@ export default function HomeScreen({ navigation }) {
         icon1={<LinkedCameraIcon width={32} height={32} />}
         icon4={<AddIcon width={24} height={24} />}
         bigText={"Minhas Câmeras"}
-        mediumText={camera + " câmeras"}
+        mediumText={camera == 1 ? camera + " câmera" : camera + " câmeras"}
         borderColor={"greenBorder"}
       />
 
@@ -125,7 +122,9 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         }
         bigText={"Meus Processos"}
-        mediumText={processo + " processos"}
+        mediumText={
+          processo == 1 ? processo + " processo" : processo + " processos"
+        }
         borderColor={"greenBorder"}
         onPress={() => {
           navigation.navigate("ProcessosList");
@@ -143,7 +142,9 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         }
         bigText={"Minhas Revelações"}
-        mediumText={revelacao + " revelações"}
+        mediumText={
+          revelacao == 1 ? revelacao + " revelação" : revelacao + " revelações"
+        }
         borderColor={"greenBorder"}
         onPress={() => {
           navigation.navigate("RevelacoesList");

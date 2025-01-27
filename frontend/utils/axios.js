@@ -2,8 +2,8 @@ import axiosLib from "axios";
 import { getToken } from "../services/TokenService";
 
 const axios = axiosLib.create({
-  baseURL: "https://casual-eft-slightly.ngrok-free.app/api",
-  // baseURL: "http://192.168.0.19:8080/api",
+  // baseURL: "https://casual-eft-slightly.ngrok-free.app/api",
+  baseURL: "http://192.168.0.19:8080/api",
   headers: {
     Accept: "application/json",
   },

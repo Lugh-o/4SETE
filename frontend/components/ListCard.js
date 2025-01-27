@@ -52,11 +52,12 @@ const styles = StyleSheet.create({
     rowGap: 8,
     // flexGrow: 1,
     // width: 180,
-    width: "100%",
+    width: "290",
   },
   iconContainer: {
     flexDirection: "column",
     rowGap: 12,
+    marginLeft: 10,
     // margin: 12,
     // flexGrow: 1,
     // width: "100%",

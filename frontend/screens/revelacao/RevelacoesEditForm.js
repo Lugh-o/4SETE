@@ -56,6 +56,7 @@ export default function RevelacoesEditForm({ navigation, route }) {
       fetchCameras();
       fetchProcessos();
     });
+    return unsubscribe;
   }, [navigation]);
 
   async function fetchFilmes() {
@@ -286,7 +287,7 @@ export default function RevelacoesEditForm({ navigation, route }) {
                     <FormTextField
                       label="Tempo da etapa*"
                       defaultValue={String(etapa.duracao)}
-                      inputMode="numeric"
+                      inputMode="decimal"
                       onChangeText={(text) =>
                         setCustomEtapas(
                           changeDictionaryValueByKey(

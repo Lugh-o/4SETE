@@ -1,7 +1,7 @@
 import { StyleSheet, Text } from "react-native";
 
 export default function SimpleText({ text, property }) {
-  return <Text style={[styles.text, styles[property]]}>{text}</Text>;
+  return <Text numberOfLines={1} style={[styles.text, styles[property]]}>{text}</Text>;
 }
 
 const styles = StyleSheet.create({

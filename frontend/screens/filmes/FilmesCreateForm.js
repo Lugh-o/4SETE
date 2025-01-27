@@ -54,7 +54,7 @@ export default function FilmesCreateForm({ navigation }) {
     setShowValidade(false);
     setValidadeSelected(true);
   }
-  
+
   function changeDataCompra(event, selectedDate) {
     setDataCompra(selectedDate);
     setShowDataCompra(false);
@@ -83,19 +83,22 @@ export default function FilmesCreateForm({ navigation }) {
         <FormTextField
           label="Marca*"
           value={marca}
+          showTopLabel={marca}
           onChangeText={(text) => setMarca(text)}
           errors={errors.marca}
         />
         <FormTextField
           label="Modelo*"
           value={modelo}
+          showTopLabel={modelo}
           onChangeText={(text) => setModelo(text)}
           errors={errors.modelo}
         />
         <FormTextField
           label="ISO*"
           value={iso}
-          inputMode="numeric"
+          showTopLabel={iso}
+          inputMode="decimal"
           onChangeText={(text) => setIso(text)}
           errors={errors.iso}
         />
@@ -147,17 +150,21 @@ export default function FilmesCreateForm({ navigation }) {
         <FormTextField
           label="Loja"
           value={loja}
+          showTopLabel={loja}
           onChangeText={(text) => setLoja(text)}
           errors={errors.loja}
         />
         <FormTextField
           label="Valor"
           value={valor}
+          showTopLabel={valor}
+          inputMode="decimal"
           onChangeText={(text) => setValor(text)}
           errors={errors.valor}
         />
         <FormTextField
           label="Observações"
+          showTopLabel={observacoes}
           value={observacoes}
           onChangeText={(text) => setObservacoes(text)}
           errors={errors.observacoes}
