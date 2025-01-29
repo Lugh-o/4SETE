@@ -1,13 +1,15 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import React, { useContext, useState } from "react";
-
 import DateTimePicker from "@react-native-community/datetimepicker";
-
 import AuthContext from "../../context/AuthContext";
-import { logout } from "../../services/AuthService";
 import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
-
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import { FilmeService } from "../../services/CrudService";
 
@@ -31,20 +33,10 @@ export default function FilmesEditForm({ navigation, route }) {
   const [observacoes, setObservacoes] = useState(filme.observacoes);
   const [errors, setErrors] = useState({});
 
-  // console.log({
-  //   marca: marca,
-  //   validade: validade,
-  //   modelo: modelo,
-  //   iso: iso,
-  //   data_compra: dataCompra,
-  //   loja: loja,
-  //   valor: valor,
-  //   observacoes: observacoes,
-  // });
-
   async function handleEdit() {
     try {
-      const payload = {
+      setErrors({});
+      await FilmeService.update(filme.id, {
         marca: marca,
         validade: validade,
         modelo: modelo,
@@ -53,12 +45,12 @@ export default function FilmesEditForm({ navigation, route }) {
         loja: loja,
         valor: valor,
         observacoes: observacoes,
-      };
-
-      const response = await FilmeService.update(filme.id, payload);
+      });
       navigation.goBack();
-    } catch (error) {
-      console.error("Erro ao editar filme:", error.message);
+    } catch (e) {
+      if (e.response.status === 422) {
+        setErrors(e.response.data.errors);
+      }
     }
   }
 
@@ -91,7 +83,7 @@ export default function FilmesEditForm({ navigation, route }) {
         />
       </View>
       <Text style={styles.title}>Informações Básicas</Text>
-      <View style={styles.campos}>
+      <ScrollView style={styles.campos}>
         <FormTextField
           label="Marca*"
           value={marca}
@@ -115,18 +107,24 @@ export default function FilmesEditForm({ navigation, route }) {
           errors={errors.iso}
         />
 
-        <SimpleButton
-          title={
-            validadeSelected
-              ? validade.toISOString().split("T")[0]
-              : "Data de Validade"
-          }
-          onPress={() => {
-            setShowValidade(true);
-          }}
-          textStyle={styles.buttonTextStyle}
-          otherStyle={styles.buttonContainerStyle}
-        />
+        <View style={styles.datePickerGap}>
+          {validadeSelected && (
+            <Text style={[styles.inputLabel]}>Data de Validade</Text>
+          )}
+
+          <SimpleButton
+            title={
+              validadeSelected
+                ? validade.toISOString().split("T")[0]
+                : "Data de Validade"
+            }
+            onPress={() => {
+              setShowValidade(true);
+            }}
+            textStyle={styles.buttonTextStyle}
+            otherStyle={styles.buttonContainerStyle}
+          />
+        </View>
         {showValidade && (
           <DateTimePicker
             testID="validadePicker"
@@ -137,18 +135,24 @@ export default function FilmesEditForm({ navigation, route }) {
           />
         )}
 
-        <SimpleButton
-          title={
-            dataCompraSelected
-              ? dataCompra.toISOString().split("T")[0]
-              : "Data de Compra"
-          }
-          onPress={() => {
-            setShowDataCompra(true);
-          }}
-          textStyle={styles.buttonTextStyle}
-          otherStyle={styles.buttonContainerStyle}
-        />
+        <View style={styles.datePickerGap}>
+          {dataCompraSelected && (
+            <Text style={[styles.inputLabel]}>Data de Compra</Text>
+          )}
+
+          <SimpleButton
+            title={
+              dataCompraSelected
+                ? dataCompra.toISOString().split("T")[0]
+                : "Data de Compra"
+            }
+            onPress={() => {
+              setShowDataCompra(true);
+            }}
+            textStyle={styles.buttonTextStyle}
+            otherStyle={styles.buttonContainerStyle}
+          />
+        </View>
         {showDataCompra && (
           <DateTimePicker
             testID="dataCompraPicker"
@@ -170,6 +174,7 @@ export default function FilmesEditForm({ navigation, route }) {
           label="Valor"
           value={valor}
           showTopLabel={valor}
+          isValor={true}
           inputMode="decimal"
           onChangeText={(text) => setValor(text)}
           errors={errors.valor}
@@ -181,12 +186,25 @@ export default function FilmesEditForm({ navigation, route }) {
           onChangeText={(text) => setObservacoes(text)}
           errors={errors.observacoes}
         />
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  datePickerGap: {
+    marginBottom: 24
+  },
+  inputLabel: {
+    position: "absolute",
+    zIndex: 100,
+    left: 12,
+    top: -5,
+    backgroundColor: "#FFF",
+    fontSize: 10,
+    fontFamily: "Inter-Regular",
+    color: "#666",
+  },
   buttonTextStyle: {
     fontSize: 14,
     fontFamily: "Inter-Regular",
@@ -206,18 +224,15 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
     color: "#1a1a1a",
     textAlign: "left",
-    width: "100%",
-    paddingLeft: 20,
+    marginLeft: -125,
   },
   header: {
-    position: "absolute",
-    top: 54,
+    marginTop: 54,
     flexDirection: "row",
-    gap: 162.25,
+    gap: 174.75,
   },
   campos: {
-    gap: 24,
-    marginTop: 44,
+    marginTop: 24,
   },
   container: {
     flex: 1,

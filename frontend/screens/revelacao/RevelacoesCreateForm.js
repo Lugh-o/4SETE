@@ -6,19 +6,15 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useContext, useState } from "react";
-
 import { Dropdown } from "react-native-element-dropdown";
 import AuthContext from "../../context/AuthContext";
 import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
 import Logo from "../../components/Logo";
 import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
-import Navbar from "../../components/Navbar";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import Move from "../../assets/Move.svg";
 import AddIconGreen from "../../assets/add_green.svg";
-
-import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import {
   CameraService,
   FilmeService,
@@ -27,7 +23,6 @@ import {
 } from "../../services/CrudService";
 import TextButton from "../../components/TextButton";
 import SplashScreen from "../SplashScreen";
-import TimeInput from "../../components/TimeInput";
 
 export default function RevelacoesCreateForm({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -40,11 +35,10 @@ export default function RevelacoesCreateForm({ navigation }) {
   const [cameraDropdownList, setCameraDropdownList] = useState([]);
   const [processoDropdownList, setProcessoDropdownList] = useState([]);
 
-  const [filme, setFilme] = useState("");
-  const [camera, setCamera] = useState("");
-  const [processo, setProcesso] = useState("");
+  const [filme, setFilme] = useState();
+  const [camera, setCamera] = useState();
+  const [processo, setProcesso] = useState();
   const [customEtapas, setCustomEtapas] = useState([]);
-  const [revelacao, setRevelacao] = useState("");
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
@@ -127,30 +121,40 @@ export default function RevelacoesCreateForm({ navigation }) {
       nome: "etapa",
       duracao: "",
       processo_id: "",
-      posicao: customEtapas.length,
+      posicao: customEtapas.length + 1,
     });
     setCustomEtapas(newEtapaList);
   }
 
-  async function postRevelacao(goBack) {
-    const revelacao = {
-      filme_id: filmeList[filme]["id"],
-      camera_id: cameraList[camera]["id"],
-      processo_id: processoList[processo]["id"],
-      revelacao_etapas: customEtapas,
-    };
-
+  async function postRevelacao(comecarRevelacao) {
     try {
-      const response = await RevelacaoService.create(revelacao);
-      const revelacaoId = response.data["id"];
+      const filmeId =
+        filmeList[filme] == undefined ? "" : filmeList[filme]["id"];
+      const cameraId =
+        cameraList[camera] == undefined ? "" : cameraList[camera]["id"];
+      const processoId =
+        processoList[processo] == undefined ? "" : processoList[processo]["id"];
 
-      setRevelacao(revelacaoId);
+      const response = await RevelacaoService.create({
+        filme_id: filmeId,
+        camera_id: cameraId,
+        processo_id: processoId,
+        revelacao_etapas: customEtapas,
+      });
 
-      if (goBack) navigation.goBack();
-      return revelacaoId;
-    } catch (error) {
-      console.error(error.response?.data || error.message);
-      throw error;
+      if (comecarRevelacao) {
+        navigation.navigate("CronometroScreen", {
+          etapas: customEtapas,
+          processo: processoList[processo]["id"],
+          revelacao: response.data["id"],
+        });
+      } else {
+        navigation.goBack();
+      }
+    } catch (e) {
+      if (e.response.status === 422) {
+        setErrors(e.response.data.errors);
+      }
     }
   }
 
@@ -159,39 +163,6 @@ export default function RevelacoesCreateForm({ navigation }) {
     newArray[index][key] = value;
     return newArray;
   }
-
-  async function comecarRevelacao() {
-    try {
-      const waiter = await postRevelacao(false);
-
-      navigation.navigate("CronometroScreen", {
-        etapas: customEtapas,
-        processo: processoList[processo]["id"],
-        revelacao: waiter,
-      });
-    } catch (error) {
-      console.error("Erro ao iniciar a revelação:", error.message);
-    }
-  }
-
-  function stringToSec(string) {
-    const [minutes, seconds] = string.split(":");
-    const totalSeconds = +minutes * 60 + +seconds;
-    return totalSeconds;
-  }
-
-  const toHHMMSS = (secs) => {
-    const secNum = parseInt(secs.toString(), 10);
-    const hours = Math.floor(secNum / 3600);
-    const minutes = Math.floor(secNum / 60) % 60;
-    const seconds = secNum % 60;
-
-    return [hours, minutes, seconds]
-      .map((val) => (val < 10 ? `0${val}` : val))
-      .filter((val, index) => val !== "00" || index > 0)
-      .join(":")
-      .replace(/^0/, "");
-  };
 
   if (loading) return <SplashScreen />;
 
@@ -233,6 +204,7 @@ export default function RevelacoesCreateForm({ navigation }) {
               setFilme(item.value);
             }}
           />
+          <Text style={styles.error}>{errors.filme_id}</Text>
           <Dropdown
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
@@ -251,6 +223,7 @@ export default function RevelacoesCreateForm({ navigation }) {
               setCamera(item.value);
             }}
           />
+          <Text style={styles.error}>{errors.camera_id}</Text>
           <Dropdown
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
@@ -270,6 +243,8 @@ export default function RevelacoesCreateForm({ navigation }) {
               setCustomEtapas(processoList[item.value].processo_etapa);
             }}
           />
+          <Text style={styles.error}>{errors.processo_id}</Text>
+
           <View style={styles.allStepContainer}>
             {Array.isArray(customEtapas) &&
               customEtapas.map((etapa, index) => (
@@ -277,7 +252,7 @@ export default function RevelacoesCreateForm({ navigation }) {
                   <Text style={styles.stepTitle}>{etapa.nome}</Text>
                   <View style={styles.stepBody}>
                     <TouchableOpacity>
-                      <Move width={16} height={16} />
+                      <Move width={16} height={16} style={styles.moveIcon} />
                     </TouchableOpacity>
 
                     <FormTextField
@@ -294,6 +269,7 @@ export default function RevelacoesCreateForm({ navigation }) {
                           )
                         )
                       }
+                      errors={errors[`revelacao_etapas.${index}.duracao`]}
                     />
 
                     {etapa.posicao == 1 ? (
@@ -302,7 +278,7 @@ export default function RevelacoesCreateForm({ navigation }) {
                       <TouchableOpacity
                         onPress={() => handleStepDeletion(index)}
                       >
-                        <Delete />
+                        <Delete style={styles.moveIcon} />
                       </TouchableOpacity>
                     )}
                   </View>
@@ -326,10 +302,13 @@ export default function RevelacoesCreateForm({ navigation }) {
             />
           )}
         </ScrollView>
-        <SimpleButton title="Começar a revelar" onPress={comecarRevelacao} />
+        <SimpleButton
+          title="Começar a revelar"
+          onPress={() => postRevelacao(true)}
+        />
         <TextButton
           title="Salvar para depois"
-          onPress={() => postRevelacao(true)}
+          onPress={() => postRevelacao(false)}
         />
       </View>
     </View>
@@ -337,6 +316,20 @@ export default function RevelacoesCreateForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  moveIcon: {
+    alignSelf: "center",
+    marginBottom: 24,
+  },
+  error: {
+    color: "#E90000",
+    marginTop: 2,
+    fontSize: 10,
+    fontFamily: "Inter-Regular",
+    textAlign: "left",
+    flex: 1,
+    alignSelf: "stretch",
+    marginLeft: 16,
+  },
   otherStyle: {
     gap: 12,
   },
@@ -344,7 +337,7 @@ const styles = StyleSheet.create({
     backgroundColor: 0,
     margin: 0,
     padding: 12,
-    marginTop: 24,
+    marginBottom: 24,
     alignSelf: "flex-end",
     justifyContent: "center",
     alignItems: "center",
@@ -355,7 +348,7 @@ const styles = StyleSheet.create({
     color: "#006A04",
   },
   allStepContainer: {
-    gap: 24,
+    marginTop: 24,
   },
   stepTitle: {
     position: "absolute",

@@ -4,15 +4,17 @@ export default function FormTextField({
   label,
   errors = [],
   showTopLabel = null,
+  isValor = false,
   ...rest
 }) {
   return (
-    <View>
+    <View style={styles.gap}>
       {!(showTopLabel === null || showTopLabel == "") && (
         <Text style={[styles.inputLabel]}>{label}</Text>
       )}
+      {isValor && <Text style={styles.prefix}>R$</Text>}
       <TextInput
-        style={[styles.input]}
+        style={[styles.input, isValor && styles.valorPlaceholderPadding]}
         autoCapitalize="none"
         autoCorrect={false}
         maxLength={255}
@@ -23,7 +25,7 @@ export default function FormTextField({
       {errors.map((err) => {
         return (
           <Text key={err} style={styles.error}>
-            {err}
+            {String(err)}
           </Text>
         );
       })}
@@ -32,6 +34,19 @@ export default function FormTextField({
 }
 
 const styles = StyleSheet.create({
+  gap: {
+    marginBottom: 24,
+  },
+  prefix: {
+    position: "absolute",
+    zIndex: 100,
+    left: 12,
+    top: 14,
+    backgroundColor: "#FFF",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+    color: "#1a1a1a",
+  },
   inputLabel: {
     position: "absolute",
     zIndex: 100,
@@ -61,5 +76,8 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
     color: "#1a1a1a",
     textAlign: "left",
+  },
+  valorPlaceholderPadding: {
+    paddingLeft: 35,
   },
 });

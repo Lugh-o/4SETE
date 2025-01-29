@@ -1,29 +1,17 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CameraController;
 use App\Http\Controllers\FilmeController;
 use App\Http\Controllers\ProcessoController;
 use App\Http\Controllers\ProcessoEtapaController;
 use App\Http\Controllers\RevelacaoController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Rules;
 
 Route::group(["middleware" => ["auth:sanctum"]], function () {
-    Route::get('/user', function (Request $request) {
-        try {
-            return $request->user();
-        } catch (\Throwable $th) {
-            return response()->json([
-                'error' => $th->getMessage()
-            ], 500);
-        }
-    });
-
+    Route::get('/user', [AuthController::class, 'getUser']);
+    Route::post("/logout", [AuthController::class, 'logout']);
+    
     Route::get('/filmes', [FilmeController::class, 'index']);
     Route::post('/filmes', [FilmeController::class, 'store']);
     Route::get('/filmes/{id}', [FilmeController::class, 'show']);
@@ -52,59 +40,8 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::delete('/cameras/{id}', [CameraController::class, 'destroy']);
     Route::put('/cameras/{id}', [CameraController::class, 'update']);
 
-    Route::post("/logout", function (Request $request) {
-        $request->user()->currentAccessToken()->delete();
-        return response()->noContent();
-    });
 });
 
 
-Route::post("/login", function (Request $request) {
-    $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-        'device_name' => ['required']
-    ]);
-
-    $user = User::where('email', $request->email)->first();
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect']
-        ]);
-    }
-    return response()->json([
-        'token' => $user->createToken($request->device_name)->plainTextToken
-    ]);
-});
-
-Route::post("/register", function (Request $request) {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email|max:255',
-        'password' => [
-            'required',
-            'string',
-            'confirmed',
-            'min:8',
-            function ($attribute, $value, $fail) {
-                if (!preg_match('/[a-z]/', $value)) $fail('The password must contain at least one lowercase letter.');
-                if (!preg_match('/[A-Z]/', $value)) $fail('The password must contain at least one uppercase letter.');
-                if (!preg_match('/[0-9]/', $value)) $fail('The password must contain at least one digit.');
-                if (!preg_match('/[@$!%*#?&]/', $value)) $fail('The password must contain at least one special character (@, $, !, %, *, #, ?, &).');
-            },
-            'device_name' => ['required']
-        ]
-    ]);
-
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
-
-    event(new Registered($user));
-
-    return response()->json([
-        'token' => $user->createToken($request->device_name)->plainTextToken
-    ]);
-});
+Route::post("/login", [AuthController::class, 'login']);
+Route::post("/register", [AuthController::class, 'register']);

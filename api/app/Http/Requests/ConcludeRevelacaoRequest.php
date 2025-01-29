@@ -22,8 +22,8 @@ class ConcludeRevelacaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'imagens' => ['required', 'array'],
-            'observacoes' => ['required', 'string', 'max:255'],
+            'imagens' => ['array'],
+            'observacoes' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

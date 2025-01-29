@@ -22,7 +22,7 @@ export default function RegisterActions() {
         password_confirmation: passwordConfirmation,
         device_name: `${Platform.OS} ${Platform.Version}`,
       });
-      
+
       const user = await loadUser();
       setUser(user);
       navigation.replace("Home");
@@ -62,11 +62,4 @@ export default function RegisterActions() {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  campos: {
-    gap: 12,
-  },
-  acoes: {
-    gap: 24,
-  },
-});
+const styles = StyleSheet.create({});

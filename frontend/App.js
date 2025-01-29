@@ -6,7 +6,6 @@ import LogInScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
 import SplashScreen from "./screens/SplashScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 
 import FilmesScreen from "./screens/filmes/FilmesScreen";
 import FilmesCreateForm from "./screens/filmes/FilmesCreateForm";
@@ -116,10 +115,6 @@ export default function App() {
               <>
                 <Stack.Screen name="Login" component={LogInScreen} />
                 <Stack.Screen name="Register" component={RegisterScreen} />
-                <Stack.Screen
-                  name="Forgot Password"
-                  component={ForgotPasswordScreen}
-                />
               </>
             )}
           </Stack.Navigator>

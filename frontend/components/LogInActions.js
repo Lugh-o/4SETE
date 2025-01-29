@@ -53,11 +53,4 @@ export default function LogInActions({ ...rest }) {
   );
 }
 
-const styles = StyleSheet.create({
-  campos: {
-    gap: 12,
-  },
-  acoes: {
-    gap: 24,
-  },
-});
+const styles = StyleSheet.create({});

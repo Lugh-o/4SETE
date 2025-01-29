@@ -6,19 +6,14 @@ import {
   ScrollView,
 } from "react-native";
 import { useState, useContext } from "react";
-
 import DateTimePicker from "@react-native-community/datetimepicker";
-
 import AuthContext from "../../context/AuthContext";
-import { logout } from "../../services/AuthService";
 import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
 import Delete from "../../assets/buttonIcons/delete.svg";
 import AddIconGreen from "../../assets/add_green.svg";
-
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import { ProcessoService } from "../../services/CrudService";
-import TimeInput from "../../components/TimeInput";
 
 export default function ProcessosEditForm({ navigation, route }) {
   const processo = route.params.processo;
@@ -27,6 +22,9 @@ export default function ProcessosEditForm({ navigation, route }) {
   const [marca, setMarca] = useState(processo.marca);
   const [dataCompra, setDataCompra] = useState(new Date(processo.data_compra));
   const [validade, setValidade] = useState(new Date(processo.validade));
+  const [validadeSelected, setValidadeSelected] = useState(true);
+  const [dataCompraSelected, setDataCompraSelected] = useState(true);
+
   const [showValidade, setShowValidade] = useState(false);
   const [showDataCompra, setShowDataCompra] = useState(false);
   const [loja, setLoja] = useState(processo.loja);
@@ -56,24 +54,24 @@ export default function ProcessosEditForm({ navigation, route }) {
   }
 
   async function editProcesso() {
-    const novoProcesso = {
-      nome: nome,
-      marca: marca,
-      data_compra: dataCompra,
-      validade: validade,
-      loja: loja,
-      valor: valor,
-      quantidade_usos: quantidadeUsos,
-      observacoes: observacoes,
-      processo_etapas: etapaList,
-    };
-
     try {
-      const response = await ProcessoService.update(processo.id, novoProcesso);
+      await ProcessoService.update(processo.id, {
+        nome: nome,
+        marca: marca,
+        data_compra: dataCompra,
+        validade: validade,
+        loja: loja,
+        valor: valor,
+        quantidade_usos: quantidadeUsos,
+        observacoes: observacoes,
+        processo_etapas: etapaList,
+      });
 
       navigation.goBack();
-    } catch (error) {
-      console.error(error.response?.data || error.message);
+    } catch (e) {
+      if (e.response.status === 422) {
+        setErrors(e.response.data.errors);
+      }
     }
   }
 
@@ -139,21 +137,30 @@ export default function ProcessosEditForm({ navigation, route }) {
             errors={errors.nome}
           />
           <FormTextField
-            label="Marca*"
+            label="Marca"
             defaultValue={marca}
             showTopLabel={marca}
             onChangeText={(text) => setMarca(text)}
             errors={errors.marca}
           />
 
-          <SimpleButton
-            title={dataCompra.toISOString().split("T")[0]}
-            onPress={() => {
-              setShowDataCompra(true);
-            }}
-            textStyle={styles.buttonTextStyle}
-            otherStyle={styles.buttonContainerStyle}
-          />
+          <View style={styles.datePickerGap}>
+            {dataCompraSelected && (
+              <Text style={[styles.inputLabel]}>Data de Compra</Text>
+            )}
+            <SimpleButton
+              title={
+                dataCompraSelected
+                  ? dataCompra.toISOString().split("T")[0]
+                  : "Data de Compra"
+              }
+              onPress={() => {
+                setShowDataCompra(true);
+              }}
+              textStyle={styles.buttonTextStyle}
+              otherStyle={styles.buttonContainerStyle}
+            />
+          </View>
           {showDataCompra && (
             <DateTimePicker
               testID="dataCompraPicker"
@@ -164,14 +171,23 @@ export default function ProcessosEditForm({ navigation, route }) {
             />
           )}
 
-          <SimpleButton
-            title={validade.toISOString().split("T")[0]}
-            onPress={() => {
-              setShowValidade(true);
-            }}
-            textStyle={styles.buttonTextStyle}
-            otherStyle={styles.buttonContainerStyle}
-          />
+          <View style={styles.datePickerGap}>
+            {validadeSelected && (
+              <Text style={[styles.inputLabel]}>Data de Validade</Text>
+            )}
+            <SimpleButton
+              title={
+                validadeSelected
+                  ? validade.toISOString().split("T")[0]
+                  : "Data de Validade"
+              }
+              onPress={() => {
+                setShowValidade(true);
+              }}
+              textStyle={styles.buttonTextStyle}
+              otherStyle={styles.buttonContainerStyle}
+            />
+          </View>
           {showValidade && (
             <DateTimePicker
               testID="validadePicker"
@@ -194,6 +210,7 @@ export default function ProcessosEditForm({ navigation, route }) {
             defaultValue={valor}
             inputMode="decimal"
             showTopLabel={valor}
+            isValor={true}
             onChangeText={(text) => setValor(text)}
             errors={errors.valor}
           />
@@ -203,6 +220,7 @@ export default function ProcessosEditForm({ navigation, route }) {
             showTopLabel={quantidadeUsos}
             defaultValue={quantidadeUsos == null ? "" : String(quantidadeUsos)}
             onChangeText={(text) => setQuantidadeUsos(text)}
+            errors={errors.quantidade_usos}
           />
           <FormTextField
             label="Observações*"
@@ -241,6 +259,7 @@ export default function ProcessosEditForm({ navigation, route }) {
                     changeDictionaryValueByKey(etapaList, index, "nome", text)
                   )
                 }
+                errors={errors[`processo_etapas.${index}.nome`]}
               />
               <FormTextField
                 label="Tempo da etapa*"
@@ -256,6 +275,7 @@ export default function ProcessosEditForm({ navigation, route }) {
                     )
                   )
                 }
+                errors={errors[`processo_etapas.${index}.duracao`]}
               />
             </View>
           ))}
@@ -280,6 +300,19 @@ export default function ProcessosEditForm({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  datePickerGap: {
+    marginBottom: 24,
+  },
+  inputLabel: {
+    position: "absolute",
+    zIndex: 100,
+    left: 12,
+    top: -5,
+    backgroundColor: "#FFF",
+    fontSize: 10,
+    fontFamily: "Inter-Regular",
+    color: "#666",
+  },
   buttonTextStyle: {
     fontSize: 14,
     fontFamily: "Inter-Regular",
@@ -304,7 +337,6 @@ const styles = StyleSheet.create({
     color: "#006A04",
   },
   stepContainer: {
-    gap: 12,
     marginTop: 24,
   },
   stepTitle: {
@@ -312,6 +344,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
     color: "#1a1a1a",
     width: 284,
+    marginBottom: 12,
   },
   stepText: {
     marginTop: 13,
@@ -331,7 +364,7 @@ const styles = StyleSheet.create({
     backgroundColor: 0,
     margin: 0,
     padding: 12,
-    marginTop: 24,
+    marginBottom: 24,
     alignSelf: "flex-end",
   },
   textoAddEtapa: {
@@ -352,7 +385,6 @@ const styles = StyleSheet.create({
     gap: 136.75,
   },
   campos: {
-    gap: 24,
     marginTop: 45,
   },
   container: {

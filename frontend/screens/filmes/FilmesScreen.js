@@ -1,14 +1,10 @@
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import React, { useContext, useState } from "react";
-
 import AuthContext from "../../context/AuthContext";
-import { logout } from "../../services/AuthService";
-
 import Logo from "../../components/Logo";
 import SimpleButton from "../../components/SimpleButton";
 import Navbar from "../../components/Navbar";
 import ListCard from "../../components/ListCard";
-
 import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
@@ -96,7 +92,9 @@ export default function FilmesScreen({ navigation }) {
             }}
             buttonStyle={styles.botaoAddEtapa}
             textStyle={styles.textoAddEtapa}
-            rightIcon={<AddIcon width={16} height={16} style={{alignSelf:"center"}}/>}
+            rightIcon={
+              <AddIcon width={16} height={16} style={{ alignSelf: "center" }} />
+            }
             otherStyle={styles.otherStyle}
           />
         </ScrollView>
@@ -108,13 +106,14 @@ export default function FilmesScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   otherStyle: {
-    gap: 12
+    gap: 12,
   },
   botaoAddEtapa: {
     backgroundColor: 0,
     margin: 0,
     padding: 12,
     marginTop: 24,
+    marginBottom: 24,
     marginRight: 20,
     alignSelf: "flex-end",
   },
@@ -132,7 +131,6 @@ const styles = StyleSheet.create({
     height: 594,
     gap: 12,
   },
-  headerContainer: {},
   title: {
     fontSize: 14,
     fontWeight: "600",

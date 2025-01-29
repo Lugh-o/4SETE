@@ -21,12 +21,7 @@ export default function LoginScreen({ navigation }) {
           }}
         />
 
-        <TextButton
-          title="Esqueci a senha"
-          onPress={() => {
-            navigation.navigate("Forgot Password");
-          }}
-        />
+        <TextButton title="Esqueci a senha" />
       </View>
 
       <TextButton

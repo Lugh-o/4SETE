@@ -1,13 +1,10 @@
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import React, { useState, useContext } from "react";
-
 import AuthContext from "../../context/AuthContext";
-
 import Logo from "../../components/Logo";
 import SimpleButton from "../../components/SimpleButton";
 import Navbar from "../../components/Navbar";
 import ListCard from "../../components/ListCard";
-
 import ArrowDropDown from "../../assets/buttonIcons/arrow_drop_down_circle.svg";
 import Edit from "../../assets/buttonIcons/border_color.svg";
 import Delete from "../../assets/buttonIcons/delete.svg";
@@ -123,6 +120,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginRight: 20,
     alignSelf: "flex-end",
+    marginBottom: 24,
   },
   textoAddEtapa: {
     margin: 0,

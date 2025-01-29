@@ -6,19 +6,14 @@ import {
   ScrollView,
 } from "react-native";
 import { useContext, useState } from "react";
-
 import DateTimePicker from "@react-native-community/datetimepicker";
-
 import AuthContext from "../../context/AuthContext";
-import { logout } from "../../services/AuthService";
 import SimpleButton from "../../components/SimpleButton";
 import FormTextField from "../../components/FormTextField";
 import Delete from "../../assets/buttonIcons/delete.svg";
-
 import AddIcon from "../../assets/buttonIcons/add_2.svg";
 import AddIconGreen from "../../assets/add_green.svg";
 import { ProcessoService } from "../../services/CrudService";
-import TimeInput from "../../components/TimeInput";
 
 export default function ProcessosCreateForm({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
@@ -66,23 +61,23 @@ export default function ProcessosCreateForm({ navigation }) {
   }
 
   async function postProcesso() {
-    const processo = {
-      nome: nome,
-      marca: marca,
-      data_compra: dataCompra,
-      validade: validade,
-      loja: loja,
-      valor: valor,
-      quantidade_usos: quantidadeUsos,
-      observacoes: observacoes,
-      processo_etapas: etapaList,
-    };
-
     try {
-      const response = await ProcessoService.create(processo);
+      await ProcessoService.create({
+        nome: nome,
+        marca: marca,
+        data_compra: dataCompra,
+        validade: validade,
+        loja: loja,
+        valor: valor,
+        quantidade_usos: quantidadeUsos,
+        observacoes: observacoes,
+        processo_etapas: etapaList,
+      });
       navigation.goBack();
-    } catch (error) {
-      console.error(error.response.data);
+    } catch (e) {
+      if (e.response.status === 422) {
+        setErrors(e.response.data.errors);
+      }
     }
   }
 
@@ -145,18 +140,23 @@ export default function ProcessosCreateForm({ navigation }) {
             errors={errors.marca}
           />
 
-          <SimpleButton
-            title={
-              dataCompraSelected
-                ? dataCompra.toISOString().split("T")[0]
-                : "Data de Compra"
-            }
-            onPress={() => {
-              setShowDataCompra(true);
-            }}
-            textStyle={styles.buttonTextStyle}
-            otherStyle={styles.buttonContainerStyle}
-          />
+          <View style={styles.datePickerGap}>
+            {dataCompraSelected && (
+              <Text style={[styles.inputLabel]}>Data de Compra</Text>
+            )}
+            <SimpleButton
+              title={
+                dataCompraSelected
+                  ? dataCompra.toISOString().split("T")[0]
+                  : "Data de Compra"
+              }
+              onPress={() => {
+                setShowDataCompra(true);
+              }}
+              textStyle={styles.buttonTextStyle}
+              otherStyle={styles.buttonContainerStyle}
+            />
+          </View>
           {showDataCompra && (
             <DateTimePicker
               testID="dataCompraPicker"
@@ -167,18 +167,23 @@ export default function ProcessosCreateForm({ navigation }) {
             />
           )}
 
-          <SimpleButton
-            title={
-              validadeSelected
-                ? validade.toISOString().split("T")[0]
-                : "Data de Validade"
-            }
-            onPress={() => {
-              setShowValidade(true);
-            }}
-            textStyle={styles.buttonTextStyle}
-            otherStyle={styles.buttonContainerStyle}
-          />
+          <View style={styles.datePickerGap}>
+            {validadeSelected && (
+              <Text style={[styles.inputLabel]}>Data de Validade</Text>
+            )}
+            <SimpleButton
+              title={
+                validadeSelected
+                  ? validade.toISOString().split("T")[0]
+                  : "Data de Validade"
+              }
+              onPress={() => {
+                setShowValidade(true);
+              }}
+              textStyle={styles.buttonTextStyle}
+              otherStyle={styles.buttonContainerStyle}
+            />
+          </View>
           {showValidade && (
             <DateTimePicker
               testID="validadePicker"
@@ -200,6 +205,7 @@ export default function ProcessosCreateForm({ navigation }) {
             label="Valor"
             value={valor}
             showTopLabel={valor}
+            isValor={true}
             inputMode="decimal"
             onChangeText={(text) => setValor(text)}
             errors={errors.valor}
@@ -210,7 +216,7 @@ export default function ProcessosCreateForm({ navigation }) {
             showTopLabel={quantidadeUsos}
             inputMode="decimal"
             onChangeText={(text) => setQuantidadeUsos(text)}
-            errors={errors.observacoes}
+            errors={errors.quantidade_usos}
           />
           <FormTextField
             label="Observações"
@@ -249,6 +255,7 @@ export default function ProcessosCreateForm({ navigation }) {
                     changeDictionaryValueByKey(etapaList, index, "nome", text)
                   )
                 }
+                errors={errors[`processo_etapas.${index}.nome`]}
               />
 
               <FormTextField
@@ -264,6 +271,7 @@ export default function ProcessosCreateForm({ navigation }) {
                     )
                   )
                 }
+                errors={errors[`processo_etapas.${index}.duracao`]}
               />
             </View>
           ))}
@@ -287,6 +295,19 @@ export default function ProcessosCreateForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  datePickerGap: {
+    marginBottom: 24,
+  },
+  inputLabel: {
+    position: "absolute",
+    zIndex: 100,
+    left: 12,
+    top: -5,
+    backgroundColor: "#FFF",
+    fontSize: 10,
+    fontFamily: "Inter-Regular",
+    color: "#666",
+  },
   buttonTextStyle: {
     fontSize: 14,
     fontFamily: "Inter-Regular",
@@ -311,7 +332,7 @@ const styles = StyleSheet.create({
     color: "#006A04",
   },
   stepContainer: {
-    gap: 12,
+    // gap: 12,
     marginTop: 24,
   },
   stepTitle: {
@@ -319,6 +340,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
     color: "#1a1a1a",
     width: 284,
+    marginBottom: 12,
   },
   stepText: {
     marginTop: 13,
@@ -338,7 +360,7 @@ const styles = StyleSheet.create({
     backgroundColor: 0,
     margin: 0,
     padding: 12,
-    marginTop: 24,
+    marginBottom: 24,
     alignSelf: "flex-end",
   },
   textoAddEtapa: {
@@ -359,7 +381,6 @@ const styles = StyleSheet.create({
     gap: 136.75,
   },
   campos: {
-    gap: 24,
     marginTop: 45,
   },
   container: {
