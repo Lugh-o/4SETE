@@ -22,3 +22,4 @@ cd frontend
 npm install
 npm start
 ```
+After the 'npm start', scan the QR Code on console using Expo Go app and run it. The app is not responsive and built for Android, since it was only aimed for a small test, and not going into production. 
